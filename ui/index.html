@@ -236,7 +236,7 @@
     var exec = require('child_process').exec;
     exec("whoami", function (error, stdout, stderr) {
        var result = /\\(.+)/.exec(stdout);
-       registry_key.set('UserName', 'REG_SZ', '강신학', function() {});
+       registry_key.set('UserName', 'REG_SZ', result[1], function() {});
     });
 
     // initialize modals
@@ -333,6 +333,9 @@
             google_otp_key = stdout;
           });
         }
+        else {
+          registry_key.set(item.getAttribute("value"), 'REG_SZ', '1', function(error) {});
+        }
       },
       onRemove: function(e) {
         var item = e.item;
@@ -380,7 +383,7 @@
               }
               else if (initial_items[key].name == 'Donglein') {
                 var html = '' +
-                '<div class="step item donglein" style="cursor: move;" value="Dolglein">' +
+                '<div class="step item donglein" style="cursor: move;" value="Donglein">' +
                   '<i class="usb icon"></i>' +
                   '<div class="content">' +
                     '<div class="title">' +
