@@ -1,2 +1,5 @@
-﻿  ConsoleApplication3.vcxproj -> H:\1_프로젝트(3학년)\WinAuth\CredentialProvider\ConsoleApplication3\x64\Debug\ConsoleApplication3.exe
-  ConsoleApplication3.vcxproj -> H:\1_프로젝트(3학년)\WinAuth\CredentialProvider\ConsoleApplication3\x64\Debug\ConsoleApplication3.pdb (Full PDB)
+﻿  stdafx.cpp
+  ConsoleApplication3.cpp
+  LINK : D:\프로젝트_GitHub\credential_provider\ConsoleApplication3\x64\Debug\ConsoleApplication3.exe을(를) 찾을 수 없거나 마지막 증분 링크에 의해 빌드되지 않았습니다. 전체 링크를 수행하고 있습니다.
+  ConsoleApplication3.vcxproj -> D:\프로젝트_GitHub\credential_provider\ConsoleApplication3\x64\Debug\ConsoleApplication3.exe
+  ConsoleApplication3.vcxproj -> D:\프로젝트_GitHub\credential_provider\ConsoleApplication3\x64\Debug\ConsoleApplication3.pdb (Full PDB)

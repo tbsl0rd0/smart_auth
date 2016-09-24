@@ -8,7 +8,7 @@
 #define REG_OFF 0
 
 #define Auth0 "GoogleOTP"
-#define Auth1 "HardwareAuth"
+#define Auth1 "SmartIDCard"
 
 struct RegFlag {
 	BYTE REG_GoogleOTP;
