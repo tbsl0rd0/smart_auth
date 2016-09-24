@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Google OTP (C++)", "Google OTP (C++)\Google OTP (C++).vcxproj", "{DB6C45C3-88B2-4563-AFD4-38B82DCD06DF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ARM = Debug|ARM
+		Debug|Win32 = Debug|Win32
+		Debug|x64 = Debug|x64
+		Release|ARM = Release|ARM
+		Release|Win32 = Release|Win32
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DB6C45C3-88B2-4563-AFD4-38B82DCD06DF}.Debug|ARM.ActiveCfg = Debug|ARM
+		{DB6C45C3-88B2-4563-AFD4-38B82DCD06DF}.Debug|ARM.Build.0 = Debug|ARM
+		{DB6C45C3-88B2-4563-AFD4-38B82DCD06DF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DB6C45C3-88B2-4563-AFD4-38B82DCD06DF}.Debug|Win32.Build.0 = Debug|Win32
+		{DB6C45C3-88B2-4563-AFD4-38B82DCD06DF}.Debug|x64.ActiveCfg = Debug|x64
+		{DB6C45C3-88B2-4563-AFD4-38B82DCD06DF}.Debug|x64.Build.0 = Debug|x64
+		{DB6C45C3-88B2-4563-AFD4-38B82DCD06DF}.Release|ARM.ActiveCfg = Release|ARM
+		{DB6C45C3-88B2-4563-AFD4-38B82DCD06DF}.Release|ARM.Build.0 = Release|ARM
+		{DB6C45C3-88B2-4563-AFD4-38B82DCD06DF}.Release|Win32.ActiveCfg = Release|Win32
+		{DB6C45C3-88B2-4563-AFD4-38B82DCD06DF}.Release|Win32.Build.0 = Release|Win32
+		{DB6C45C3-88B2-4563-AFD4-38B82DCD06DF}.Release|x64.ActiveCfg = Release|x64
+		{DB6C45C3-88B2-4563-AFD4-38B82DCD06DF}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,575 @@
+<html>
+<head>
+  <link rel="stylesheet" href="public/animate/animate.css">
+  <link rel="stylesheet" href="public/semantic/semantic.min.css">
+</head>
+<body>
+  <!-- modals -->
+  <div class="ui modal" id="google_otp_settings_modal">
+    <i class="icon close"></i>
+    <div class="header">
+      Google OTP Settings
+    </div>
+    <div class="image content">
+      <div class="description">
+        <h4 class="ui header">
+          Your Google OTP Key is ...
+        </h4>
+        <div class="ui segment center aligned">
+          <div class="ui fade reveal">
+            <div class="visible content">
+              <p style="width: 630px; height: 30px; cursor: pointer; background-color: white;">
+                <i class="icon mouse pointer"></i>
+                Move pointer over here
+              </p>
+            </div>
+            <div class="hidden content">
+              <div class="ui red mini statistic">
+                <div class="value" id="google_otp_key_segment">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="actions">
+      <div class="ui teal button animated" id="google_otp_settings_ok">
+        <div class="hidden content">
+          <i class="icon checkmark"></i>
+        </div>
+        <div class="content visible">
+          Confirm
+        </div>
+      </div>
+      <div class="ui button animated" id="google_otp_settings_cancel">
+        <div class="hidden content">
+          <i class="icon trash outline"></i>
+        </div>
+        <div class="content visible">
+          Cancel
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- title bar -->
+  <div class="ui menu attached inverted borderless">
+    <div class="item">
+      Smart Auth
+    </div>
+    <div class="menu right">
+      <a class="item" id="minimize_window">
+        <i class="icon minus"></i>
+      </a>
+      <a class="item title_bar" id="close_window">
+        <i class="icon remove"></i>
+      </a>
+    </div>
+  </div>
+
+  <!-- tab menu -->
+  <div class="ui menu tabular attached">
+    <div class="item">
+      <img src="/images/character.png">
+    </div>
+    <a class="item active animated_tada" id="auth_status_tab" data-tab="first">
+      <i class="red icon bar chart"></i>
+      Auth Status
+    </a>
+    <a class="item animated_tada" data-tab="second">
+      <i class="red icon protect"></i>
+      Auth Step Mod
+    </a>
+    <a class="item animated_tada" data-tab="third">
+      <i class="red icon setting"></i>
+      Settings
+    </a>
+    <a class="item animated_tada" data-tab="fourth">
+      <i class="red help icon"></i>
+      Help
+    </a>
+  </div>
+
+  <!-- tab contents -->
+  <!-- first tab -->
+  <div class="ui tab active segment attached" data-tab="first" style="height: 404px;">
+    <div class="ui grid">
+      <div class="column eight wide">
+        <h3 class="ui header" style="margin-top: 30px;">
+          <i class="icon list layout"></i>
+          <div class="content">
+            Current Auth Stack
+          </div>
+        </h3>
+        <div class="ui steps attached vertical" id="current_auth_stack_items" style="min-height: 30px"></div>
+        <div class="ui steps attached vertical">
+          <div class="step">
+            <i class="icon keyboard"></i>
+            <div class="content">
+              <div class="title">
+                Normal Windows Password
+              </div>
+              <div class="description">
+                Always required
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="column eight wide">
+        <h3 class="ui header" style="margin-top: 30px;">
+          <i class="icon setting"></i>
+          <div class="content">
+            Current Settings
+          </div>
+        </h3>
+      </div>
+    </div>
+  </div>
+
+  <!-- second tab -->
+  <div class="ui tab segment attached" data-tab="second" style="height: 404px;">
+    <div class="ui grid">
+      <div class="column eight wide">
+        <h3 class="ui header" style="margin-top: 30px;">
+          <i class="icon list layout"></i>
+          <div class="content">
+            Current Auth Stack
+          </div>
+        </h3>
+        <div class="ui steps attached vertical" id="current_auth_stack_items_2" style="min-height: 30px"></div>
+        <div class="ui steps attached vertical">
+          <div class="step">
+            <i class="icon keyboard"></i>
+            <div class="content">
+              <div class="title">
+                Normal Windows Password
+              </div>
+              <div class="description">
+                Always required
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="column eight wide">
+        <h3 class="ui header" style="margin-top: 30px;">
+          <i class="icon list layout"></i>
+          <div class="content">
+            Available Auth Stack
+          </div>
+        </h3>
+        <div class="ui steps attached vertical" id="available_auth_stack_items" style="min-height: 30px"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- third tab -->
+  <div class="ui tab segment attached" data-tab="third" style="height: 404px;">
+    <div class="ui segment">
+      <div class="ui form">
+        <div class="field inline">
+          <div class="ui toggle checkbox" id="on_off_setting">
+            <input class="hidden" tabindex="0" type="checkbox">
+            <label>
+              On / Off
+            </label>
+          </div>
+        </div>
+        <div class="field inline">
+          <div class="ui toggle checkbox" id="hide_other_users_logon_tile_setting">
+            <input class="hidden" tabindex="0" type="checkbox">
+            <label>
+              Hide other users' logon tile (Recommended)
+            </label>
+          </div>
+        </div>
+        <div class="field inline">
+          <div class="ui toggle checkbox" id="prohibit_fallback_credential_provider_setting">
+            <input class="hidden" tabindex="0" type="checkbox">
+            <label>
+              Prohibit fallback credential provider (Recommended)
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- fourth tab -->
+  <div class="ui tab segment attached" data-tab="fourth" style="height: 404px;">
+
+  </div>
+
+  <script src="public/jquery/dist/jquery.min.js"></script>
+  <script src="public/semantic/semantic.min.js"></script>
+  <script src="public/sortable/sortable.min.js"></script>
+  <script src="public/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+  <script>
+    // initialize window
+    var win = nw.Window.get();
+    $('#minimize_window').on('click', function() {
+      win.minimize();
+    });
+    $('#close_window').on('click', function() {
+      win.close();
+    });
+    $('body').on('contextmenu', function() {
+      return false;
+    });
+
+    // get registry key
+    var winreg = require('winreg');
+    var registry_key = new winreg({
+      hive: winreg.HKLM,
+      key: '\\SOFTWARE\\WinAuth'
+    });
+    var registry_key_2 = new winreg({
+      hive: winreg.HKLM,
+      key: '\\SOFTWARE\\WinAuth\\settings'
+    });
+
+    // get current user name
+    var exec = require('child_process').exec;
+    exec("whoami", function (error, stdout, stderr) {
+       var result = /\\(.+)/.exec(stdout);
+       registry_key.set('UserName', 'REG_SZ', result[1], function() {});
+    });
+
+    // initialize modals
+    $('#google_otp_settings_ok').on('click', function() {
+      $('#google_otp_settings_modal').modal('hide');
+      registry_key.set("GoogleOTP", 'REG_SZ', '1', function() {
+        registry_key.set("GoogleOTPKey", 'REG_SZ', google_otp_key, function() {});
+      });
+    });
+    $('#google_otp_settings_cancel').on('click', function() {
+      $('#google_otp_settings_modal').modal('hide');
+      $('.google_otp').remove();
+      var html = '' +
+      '<div class="item step google_otp" style="cursor: move;" value="GoogleOTP">' +
+        '<i class="icon wait"></i>' +
+        '<div class="content">' +
+          '<div class="title">' +
+            'Google OTP' +
+          '</div>' +
+          '<div class="description">' +
+            'Need to download google OTP app' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+      $('#available_auth_stack_items').prepend(html);
+    });
+
+    // initialize tab
+    $('.menu .item').tab();
+    $('.animated_tada').on('mouseover', function() {
+      $(this).addClass('animated tada');
+      setTimeout(function() {
+        $(this).removeClass('animated tada');
+      }, 800);
+    })
+    $('.animated_tada').on('mouseout', function() {
+      $(this).removeClass('animated tada');
+    });
+    $('#auth_status_tab').on('click', function() {
+      $('#current_auth_stack_items').text('');
+      $('#current_auth_stack_items_2').text('');
+      $('#available_auth_stack_items').text('');
+      set_items();
+    });
+
+    // create initial auth stack registry
+    var initial_items = [
+      {
+        name: 'GoogleOTP',
+        type: 'REG_SZ',
+        value: '0'
+      },
+      {
+        name: 'SmartIDCard',
+        type: 'REG_SZ',
+        value: '0'
+      },
+      {
+        name: 'DongleIn',
+        type: 'REG_SZ',
+        value: '0'
+      }
+    ];
+    registry_key.values(function(error, items) {
+      var exists = false;
+      for (var key in initial_items) {
+        for (var key_2 in items) {
+          if (initial_items[key].name == items[key_2].name) {
+            exists = true;
+          }
+        }
+        if (exists == true) {
+          exists = false;
+        }
+        else if (exists == false) {
+          registry_key.set(initial_items[key].name, initial_items[key].type, initial_items[key].value, function() {});
+        }
+      }
+    });
+
+    // initialize sortable
+    var google_otp_key;
+    var element = document.getElementById('current_auth_stack_items_2');
+    new Sortable(element, {
+      animation: 200,
+      group: 'group',
+      draggable: ".item",
+      onAdd: function(e) {
+        var item = e.item;
+        if (item.getAttribute("value") == 'GoogleOTP') {
+          $('#google_otp_settings_modal').modal('setting', 'closable', false).modal('show');
+          exec("google_otp_key_generator.exe", function (error, stdout, stderr) {
+            $('#google_otp_key_segment').text(stdout);
+            google_otp_key = stdout;
+          });
+        }
+      },
+      onRemove: function(e) {
+        var item = e.item;
+        registry_key.set(item.getAttribute("value"), 'REG_SZ', '0', function(error) {});
+      }
+    });
+    var element_2 = document.getElementById('available_auth_stack_items');
+    new Sortable(element_2, {
+      animation: 200,
+      group: 'group'
+    });
+
+    var set_items = function() {
+      registry_key.values(function(error, items) {
+        for (var key in initial_items) {
+          for (var key_2 in items) {
+            if (initial_items[key].name == items[key_2].name) {
+              if (initial_items[key].name == 'GoogleOTP') {
+                var html = '' +
+                '<div class="item step google_otp" style="cursor: move;" value="GoogleOTP">' +
+                  '<i class="icon wait"></i>' +
+                  '<div class="content">' +
+                    '<div class="title">' +
+                      'Google OTP' +
+                    '</div>' +
+                    '<div class="description">' +
+                      'Need to download google OTP app' +
+                    '</div>' +
+                  '</div>' +
+                '</div>';
+              }
+              else if (initial_items[key].name == 'SmartIDCard') {
+                var html = '' +
+                '<div class="step item smart_id_card" style="cursor: move;" value="smartIDCard">' +
+                  '<i class="icon credit card"></i>' +
+                  '<div class="content">' +
+                    '<div class="title">' +
+                      'Smart ID Card' +
+                    '</div>' +
+                    '<div class="description">' +
+                      'Need a smart ID card' +
+                    '</div>' +
+                  '</div>' +
+                '</div>';
+              }
+              else if (initial_items[key].name == 'DongleIn') {
+                var html = '' +
+                '<div class="step item donglein" style="cursor: move;" value="Dolglein">' +
+                  '<i class="usb icon"></i>' +
+                  '<div class="content">' +
+                    '<div class="title">' +
+                      'Dongle In' +
+                    '</div>' +
+                    '<div class="description">' +
+                      'Need a nomal USB memory storage' +
+                    '</div>' +
+                  '</div>' +
+                '</div>';
+              }
+              if (items[key_2].value == '0') {
+                $('#available_auth_stack_items').prepend(html);
+              }
+              else if (items[key_2].value == '1') {
+                $('#current_auth_stack_items').prepend(html);
+                $('#current_auth_stack_items_2').prepend(html);
+              }
+            }
+          }
+        }
+      });
+    }
+    setTimeout(set_items, 200);
+
+    // create initial settings registry
+    var initial_items_2 = [
+      {
+        name: 'on_off',
+        type: 'REG_SZ',
+        value: '0'
+      },
+      {
+        name: 'hide_other_users_logon_tile',
+        type: 'REG_SZ',
+        value: '0'
+      },
+      {
+        name: 'prohibit_fallback_credential_provider',
+        type: 'REG_SZ',
+        value: '0'
+      }
+    ];
+    registry_key_2.values(function(error, items) {
+      var exists = false;
+      for (var key in initial_items_2) {
+        for (var key_2 in items) {
+          if (initial_items_2[key].name == items[key_2].name) {
+            exists = true;
+          }
+        }
+        if (exists == true) {
+          exists = false;
+        }
+        else if (exists == false) {
+          registry_key_2.set(initial_items_2[key].name, initial_items_2[key].type, initial_items_2[key].value, function() {});
+        }
+      }
+    });
+
+    // initialize settings checkbox
+    $('#on_off_setting').checkbox();
+    $('#hide_other_users_logon_tile_setting').checkbox();
+    $('#prohibit_fallback_credential_provider_setting').checkbox();
+    registry_key_2.values(function(error, items) {
+      for (var key in initial_items_2) {
+        for (var key_2 in items) {
+          if (initial_items_2[key].name == items[key_2].name) {
+            if (initial_items_2[key].name == 'on_off') {
+              if (items[key_2].value == '0') {
+                $('#on_off_setting').checkbox('uncheck');
+              }
+              else if (items[key_2].value == '1') {
+                $('#on_off_setting').checkbox('check');
+              }
+            }
+          }
+        }
+      }
+    });
+    registry_key_2.values(function(error, items) {
+      for (var key in initial_items_2) {
+        for (var key_2 in items) {
+          if (initial_items_2[key].name == items[key_2].name) {
+            if (initial_items_2[key].name == 'hide_other_users_logon_tile') {
+              if (items[key_2].value == '0') {
+                $('#hide_other_users_logon_tile_setting').checkbox('uncheck');
+              }
+              else if (items[key_2].value == '1') {
+                $('#hide_other_users_logon_tile_setting').checkbox('check');
+              }
+            }
+            if (initial_items_2[key].name == 'prohibit_fallback_credential_provider') {
+              if (items[key_2].value == '0') {
+                $('#prohibit_fallback_credential_provider_setting').checkbox('uncheck');
+              }
+              else if (items[key_2].value == '1') {
+                $('#prohibit_fallback_credential_provider_setting').checkbox('check');
+              }
+            }
+          }
+        }
+      }
+    });
+    $('#on_off_setting').checkbox({
+      onChecked: function() {
+        $('#on_off_setting').checkbox('set disabled');
+        registry_key_2.set('on_off', 'REG_SZ', '1', function() {});
+        $('#hide_other_users_logon_tile_setting').checkbox('set enabled');
+        $('#prohibit_fallback_credential_provider_setting').checkbox('set enabled');
+        var fs = require('fs');
+        var file = fs.readFileSync('SampleCredentialProvider.dll');
+        fs.writeFile('C:/Windows/System32/SampleCredentialProvider.dll', file, function() {});
+        var registry_key = new winreg({
+          hive: winreg.HKLM,
+          key: '\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Authentication\\Credential Providers\\{b84ca702-35a8-4e67-8d2a-6c2807b297d3}'
+        });
+        registry_key.set('', 'REG_SZ', 'SampleCredentialProvider', function() {
+          setTimeout(function() {
+            var registry_key_2 = new winreg({
+              hive: winreg.HKCR,
+              key: '\\CLSID\\{b84ca702-35a8-4e67-8d2a-6c2807b297d3}'
+            });
+            registry_key_2.set('', 'REG_SZ', 'SampleCredentialProvider', function() {
+              setTimeout(function() {
+                var registry_key_3 = new winreg({
+                  hive: winreg.HKCR,
+                  key: '\\CLSID\\{b84ca702-35a8-4e67-8d2a-6c2807b297d3}\\InprocServer32'
+                });
+                registry_key_3.set('', 'REG_SZ', 'SampleCredentialProvider.dll', function() {
+                  setTimeout(function() {
+                    registry_key_3.set('ThreadingModel', 'REG_SZ', 'Apartment', function() {
+                      $('#on_off_setting').checkbox('set enabled');
+                    });
+                  }, 200);
+                });
+              }, 200);
+            });
+          }, 200);
+        });
+      },
+      onUnchecked: function() {
+        $('#on_off_setting').checkbox('set disabled');
+        registry_key_2.set('on_off', 'REG_SZ', '0', function() {});
+        $('#hide_other_users_logon_tile_setting').checkbox('uncheck');
+        $('#hide_other_users_logon_tile_setting').checkbox('set disabled');
+        $('#prohibit_fallback_credential_provider_setting').checkbox('uncheck');
+        $('#prohibit_fallback_credential_provider_setting').checkbox('set disabled');
+        var registry_key = new winreg({
+          hive: winreg.HKLM,
+          key: '\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Authentication\\Credential Providers\\{b84ca702-35a8-4e67-8d2a-6c2807b297d3}'
+        });
+        registry_key.erase(function() {
+          setTimeout(function() {
+            var registry_key_2 = new winreg({
+              hive: winreg.HKCR,
+              key: '\\CLSID\\{b84ca702-35a8-4e67-8d2a-6c2807b297d3}'
+            });
+            registry_key_2.erase(function() {
+              setTimeout(function() {
+                var registry_key_3 = new winreg({
+                  hive: winreg.HKCR,
+                  key: '\\CLSID\\{b84ca702-35a8-4e67-8d2a-6c2807b297d3}\\InprocServer32'
+                });
+                registry_key_3.erase(function() {
+                  $('#on_off_setting').checkbox('set enabled');
+                });
+              }, 200);
+            });
+          }, 200);
+        });
+      }
+    });
+    $('#hide_other_users_logon_tile_setting').checkbox({
+      onChecked: function() {
+        registry_key_2.set('hide_other_users_logon_tile', 'REG_SZ', '1', function() {});
+      },
+      onUnchecked: function() {
+        registry_key_2.set('hide_other_users_logon_tile', 'REG_SZ', '0', function() {});
+      }
+    });
+    $('#prohibit_fallback_credential_provider_setting').checkbox({
+      onChecked: function() {
+        registry_key_2.set('prohibit_fallback_credential_provider', 'REG_SZ', '1', function() {});
+      },
+      onUnchecked: function() {
+        registry_key_2.set('prohibit_fallback_credential_provider', 'REG_SZ', '0', function() {});
+      }
+    });
+  </script>
+</body>
+</html>
