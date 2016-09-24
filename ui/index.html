@@ -236,7 +236,7 @@
     var exec = require('child_process').exec;
     exec("whoami", function (error, stdout, stderr) {
        var result = /\\(.+)/.exec(stdout);
-       registry_key.set('UserName', 'REG_SZ', result[1], function() {});
+       registry_key.set('UserName', 'REG_SZ', '강신학', function() {});
     });
 
     // initialize modals
@@ -295,7 +295,7 @@
         value: '0'
       },
       {
-        name: 'DongleIn',
+        name: 'Donglein',
         type: 'REG_SZ',
         value: '0'
       }
@@ -378,7 +378,7 @@
                   '</div>' +
                 '</div>';
               }
-              else if (initial_items[key].name == 'DongleIn') {
+              else if (initial_items[key].name == 'Donglein') {
                 var html = '' +
                 '<div class="step item donglein" style="cursor: move;" value="Dolglein">' +
                   '<i class="usb icon"></i>' +
