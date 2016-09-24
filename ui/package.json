@@ -1,12 +1,13 @@
 {
+  "runAsAdmin": true,
   "version": "0.0.0",
   "main": "index.html",
   "name": "smart_auth",
   "window": {
     "width": 800,
     "height": 500,
-    "icon": "images/character.png",
+    "frame": false,
     "resizable": false,
-    "frame": false
+    "icon": "images/character.png"
   }
 }
