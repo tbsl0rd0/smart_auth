@@ -234,7 +234,9 @@
 
     // get current user name
     const addon = require('./addon');
-    addon.set_current_user_name_to_registry();
+    setTimeout(function() {
+      addon.set_current_user_name_to_registry();
+    }, 2000);
 
     // initialize modals
     $('#google_otp_settings_ok').on('click', function() {
