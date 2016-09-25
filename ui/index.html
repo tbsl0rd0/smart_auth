@@ -233,11 +233,8 @@
     });
 
     // get current user name
-    var exec = require('child_process').exec;
-    exec("whoami", function (error, stdout, stderr) {
-       var result = /\\(.+)/.exec(stdout);
-       registry_key.set('UserName', 'REG_SZ', result[1], function() {});
-    });
+    const addon = require('./addon');
+    addon.set_current_user_name_to_registry();
 
     // initialize modals
     $('#google_otp_settings_ok').on('click', function() {
