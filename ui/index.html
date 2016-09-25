@@ -325,6 +325,7 @@
         var item = e.item;
         if (item.getAttribute("value") == 'GoogleOTP') {
           $('#google_otp_settings_modal').modal('setting', 'closable', false).modal('show');
+          var exec = require('child_process').exec;
           exec("google_otp_key_generator.exe", function (error, stdout, stderr) {
             $('#google_otp_key_segment').text(stdout);
             google_otp_key = stdout;
