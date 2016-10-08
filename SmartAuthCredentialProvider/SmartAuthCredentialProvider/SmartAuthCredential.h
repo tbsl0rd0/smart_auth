@@ -6,7 +6,7 @@
 //
 // Copyright (c) 2006 Microsoft Corporation. All rights reserved.
 //
-// CSampleCredential is our implementation of ICredentialProviderCredential.
+// SmartAuthCredential is our implementation of ICredentialProviderCredential.
 // ICredentialProviderCredential is what LogonUI uses to let a credential
 // provider specify what a user tile looks like and then tell it what the
 // user has entered into the tile.  ICredentialProviderCredential is also
@@ -26,7 +26,7 @@
 #include "RegCheck.h"
 //#include "OtpCheck.h"
 
-class CSampleCredential : public ICredentialProviderCredential
+class SmartAuthCredential : public ICredentialProviderCredential
 {
     public:
     // IUnknown
@@ -109,9 +109,9 @@ class CSampleCredential : public ICredentialProviderCredential
                        PCWSTR pwzUsername,
                        PCWSTR pwzPassword = NULL);
 
-    CSampleCredential();
+    SmartAuthCredential();
 
-    virtual ~CSampleCredential();
+    virtual ~SmartAuthCredential();
 
   private:
     LONG                                  _cRef;

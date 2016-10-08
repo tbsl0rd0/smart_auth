@@ -1,1 +1,0 @@
-BASE 32 Encoding Key = "HMBREH33JNSG66KJ";

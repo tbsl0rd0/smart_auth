@@ -13,14 +13,14 @@
 #define WIN32_NO_STATUS
 #endif
 #include <unknwn.h>
-#include "CSampleCredential.h"
+#include "SmartAuthCredential.h"
 #include "guid.h"
 
-// CSampleCredential ////////////////////////////////////////////////////////
+// SmartAuthCredential ////////////////////////////////////////////////////////
 
 
 
-CSampleCredential::CSampleCredential():
+SmartAuthCredential::SmartAuthCredential():
     _cRef(1),
     _pCredProvCredentialEvents(NULL)
 {
@@ -32,7 +32,7 @@ CSampleCredential::CSampleCredential():
     ZeroMemory(_rgFieldStrings, sizeof(_rgFieldStrings));
 }
 
-CSampleCredential::~CSampleCredential()
+SmartAuthCredential::~SmartAuthCredential()
 {
     if (_rgFieldStrings[SFI_PASSWORD])
     {
@@ -60,7 +60,7 @@ CSampleCredential::~CSampleCredential()
 // Initializes one credential with the field information passed in.
 // Set the value of the SFI_USERNAME field to pwzUsername.
 // Optionally takes a password for the SetSerialization case.
-HRESULT CSampleCredential::Initialize(
+HRESULT SmartAuthCredential::Initialize(
     CREDENTIAL_PROVIDER_USAGE_SCENARIO cpus,
     const CREDENTIAL_PROVIDER_FIELD_DESCRIPTOR* rgcpfd,
     const FIELD_STATE_PAIR* rgfsp,
@@ -110,7 +110,7 @@ HRESULT CSampleCredential::Initialize(
 }
 
 // LogonUI calls this in order to give us a callback in case we need to notify it of anything.
-HRESULT CSampleCredential::Advise(
+HRESULT SmartAuthCredential::Advise(
     ICredentialProviderCredentialEvents* pcpce
     )
 {
@@ -124,7 +124,7 @@ HRESULT CSampleCredential::Advise(
 }
 
 // LogonUI calls this to tell us to release the callback.
-HRESULT CSampleCredential::UnAdvise()
+HRESULT SmartAuthCredential::UnAdvise()
 {
     if (_pCredProvCredentialEvents)
     {
@@ -140,7 +140,7 @@ HRESULT CSampleCredential::UnAdvise()
 // field definitions.  But if you want to do something
 // more complicated, like change the contents of a field when the tile is
 // selected, you would do it here.
-HRESULT CSampleCredential::SetSelected(BOOL* pbAutoLogon)  
+HRESULT SmartAuthCredential::SetSelected(BOOL* pbAutoLogon)  
 {
     *pbAutoLogon = FALSE;  
 
@@ -150,7 +150,7 @@ HRESULT CSampleCredential::SetSelected(BOOL* pbAutoLogon)
 // Similarly to SetSelected, LogonUI calls this when your tile was selected
 // and now no longer is. The most common thing to do here (which we do below)
 // is to clear out the password field.
-HRESULT CSampleCredential::SetDeselected()
+HRESULT SmartAuthCredential::SetDeselected()
 {
        HRESULT hr = S_OK;
     if (_rgFieldStrings[SFI_PASSWORD])
@@ -177,7 +177,7 @@ HRESULT CSampleCredential::SetDeselected()
 
 // Gets info for a particular field of a tile. Called by logonUI to get information to 
 // display the tile.
-HRESULT CSampleCredential::GetFieldState(
+HRESULT SmartAuthCredential::GetFieldState(
     DWORD dwFieldID,
     CREDENTIAL_PROVIDER_FIELD_STATE* pcpfs,
     CREDENTIAL_PROVIDER_FIELD_INTERACTIVE_STATE* pcpfis
@@ -201,7 +201,7 @@ HRESULT CSampleCredential::GetFieldState(
 }
 
 // Sets ppwsz to the string value of the field at the index dwFieldID.
-HRESULT CSampleCredential::GetStringValue(
+HRESULT SmartAuthCredential::GetStringValue(
     DWORD dwFieldID, 
     PWSTR* ppwsz
     )
@@ -224,7 +224,7 @@ HRESULT CSampleCredential::GetStringValue(
 }
 
 // Gets the image to show in the user tile.
-HRESULT CSampleCredential::GetBitmapValue(
+HRESULT SmartAuthCredential::GetBitmapValue(
     DWORD dwFieldID, 
     HBITMAP* phbmp
     )
@@ -255,7 +255,7 @@ HRESULT CSampleCredential::GetBitmapValue(
 // adjacent to. We recommend that the submit button is placed next to the last
 // field which the user is required to enter information in. Optional fields
 // should be below the submit button.
-HRESULT CSampleCredential::GetSubmitButtonValue(
+HRESULT SmartAuthCredential::GetSubmitButtonValue(
     DWORD dwFieldID,
     DWORD* pdwAdjacentTo
     )
@@ -278,7 +278,7 @@ HRESULT CSampleCredential::GetSubmitButtonValue(
 
 // Sets the value of a field which can accept a string as a value.
 // This is called on each keystroke when a user types into an edit field.
-HRESULT CSampleCredential::SetStringValue(
+HRESULT SmartAuthCredential::SetStringValue(
     DWORD dwFieldID, 
     PCWSTR pwz      
     )
@@ -306,7 +306,7 @@ HRESULT CSampleCredential::SetStringValue(
 // The following methods are for logonUI to get the values of various UI elements and then communicate
 // to the credential about what the user did in that field.  However, these methods are not implemented
 // because our tile doesn't contain these types of UI elements
-HRESULT CSampleCredential::GetCheckboxValue(
+HRESULT SmartAuthCredential::GetCheckboxValue(
     DWORD dwFieldID, 
     BOOL* pbChecked,
     PWSTR* ppwszLabel
@@ -319,7 +319,7 @@ HRESULT CSampleCredential::GetCheckboxValue(
     return E_NOTIMPL;
 }
 
-HRESULT CSampleCredential::GetComboBoxValueCount(
+HRESULT SmartAuthCredential::GetComboBoxValueCount(
     DWORD dwFieldID, 
     DWORD* pcItems, 
     DWORD* pdwSelectedItem
@@ -331,7 +331,7 @@ HRESULT CSampleCredential::GetComboBoxValueCount(
     return E_NOTIMPL;
 }
 
-HRESULT CSampleCredential::GetComboBoxValueAt(
+HRESULT SmartAuthCredential::GetComboBoxValueAt(
     DWORD dwFieldID, 
     DWORD dwItem,
     PWSTR* ppwszItem
@@ -343,7 +343,7 @@ HRESULT CSampleCredential::GetComboBoxValueAt(
     return E_NOTIMPL;
 }
 
-HRESULT CSampleCredential::SetCheckboxValue(
+HRESULT SmartAuthCredential::SetCheckboxValue(
     DWORD dwFieldID, 
     BOOL bChecked
     )
@@ -354,7 +354,7 @@ HRESULT CSampleCredential::SetCheckboxValue(
     return E_NOTIMPL;
 }
 
-HRESULT CSampleCredential::SetComboBoxSelectedValue(
+HRESULT SmartAuthCredential::SetComboBoxSelectedValue(
     DWORD dwFieldId,
     DWORD dwSelectedItem
     )
@@ -364,7 +364,7 @@ HRESULT CSampleCredential::SetComboBoxSelectedValue(
     return E_NOTIMPL;
 }
 
-HRESULT CSampleCredential::CommandLinkClicked(DWORD dwFieldID)
+HRESULT SmartAuthCredential::CommandLinkClicked(DWORD dwFieldID)
 {
     UNREFERENCED_PARAMETER(dwFieldID);
     return E_NOTIMPL;
@@ -374,7 +374,7 @@ HRESULT CSampleCredential::CommandLinkClicked(DWORD dwFieldID)
 // Collect the username and password into a serialized credential for the correct usage scenario 
 // (logon/unlock is what's demonstrated in this sample).  LogonUI then passes these credentials 
 // back to the system to log on.
-HRESULT CSampleCredential::GetSerialization(
+HRESULT SmartAuthCredential::GetSerialization(
     CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPONSE* pcpgsr,
     CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION* pcpcs, 
     PWSTR* ppwszOptionalStatusText, 
@@ -438,7 +438,7 @@ HRESULT CSampleCredential::GetSerialization(
                     if (SUCCEEDED(hr))
                     {
                         pcpcs->ulAuthenticationPackage = ulAuthPackage;
-                        pcpcs->clsidCredentialProvider = CLSID_CSampleProvider; // CLSID 설정(guid.h)
+                        pcpcs->clsidCredentialProvider = CLSID_SmartAuthProvider; // CLSID 설정(guid.h)
  
                         // At this point the credential has created the serialized credential used for logon
                         // By setting this to CPGSR_RETURN_CREDENTIAL_FINISHED we are letting logonUI know
@@ -478,7 +478,7 @@ static const REPORT_RESULT_STATUS_INFO s_rgLogonStatusInfo[] =
 // and the icon displayed in the case of a logon failure.  For example, we have chosen to 
 // customize the error shown in the case of bad username/password and in the case of the account
 // being disabled.
-HRESULT CSampleCredential::ReportResult(
+HRESULT SmartAuthCredential::ReportResult(
     NTSTATUS ntsStatus, 
     NTSTATUS ntsSubstatus,
     PWSTR* ppwszOptionalStatusText, 

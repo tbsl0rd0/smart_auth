@@ -41,7 +41,7 @@ CCommandWindow::~CCommandWindow()
 }
 
 // Performs the work required to spin off our message so we can listen for events.
-HRESULT CCommandWindow::Initialize(__in CSampleProvider *pProvider)
+HRESULT CCommandWindow::Initialize(__in SmartAuthProvider *pProvider)
 {
     HRESULT hr = S_OK;
 

@@ -17,7 +17,7 @@ static LONG g_cRef = 0;   // global dll reference count
 
 // IClassFactory ///////////////////////////////////////////////////////////////////////
 
-extern HRESULT CSampleProvider_CreateInstance(REFIID riid, void** ppv);
+extern HRESULT SmartAuthProvider_CreateInstance(REFIID riid, void** ppv);
 
 HINSTANCE g_hinst = NULL;   // global dll hinstance
 
@@ -71,7 +71,7 @@ class CClassFactory : public IClassFactory
         HRESULT hr;
         if (!pUnkOuter)
         {
-            hr = CSampleProvider_CreateInstance(riid, ppv);
+            hr = SmartAuthProvider_CreateInstance(riid, ppv);
         }
         else
         {
@@ -106,7 +106,7 @@ class CClassFactory : public IClassFactory
 HRESULT CClassFactory_CreateInstance(REFCLSID rclsid, REFIID riid, void** ppv)
 {
     HRESULT hr;
-    if (CLSID_CSampleProvider == rclsid)
+    if (CLSID_SmartAuthProvider == rclsid)
     {
         CClassFactory* pcf = new CClassFactory;
         if (pcf)

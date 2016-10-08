@@ -14,14 +14,14 @@
 #pragma once
 
 #include <windows.h>
-#include "CSampleProvider.h"
+#include "SmartAuthProvider.h"
 
 class CCommandWindow
 {
 public:
     CCommandWindow();
     ~CCommandWindow();
-    HRESULT Initialize(__in CSampleProvider *pProvider);
+    HRESULT Initialize(__in SmartAuthProvider *pProvider);
     BOOL GetConnectedStatus();
 
 private:
@@ -32,7 +32,7 @@ private:
     static DWORD WINAPI _ThreadProc(__in LPVOID lpParameter);
     static LRESULT CALLBACK    _WndProc(__in HWND hWnd, __in UINT message, __in WPARAM wParam, __in LPARAM lParam);
     
-    CSampleProvider            *_pProvider;        // Pointer to our owner.
+	SmartAuthProvider            *_pProvider;        // Pointer to our owner.
     HWND                        _hWnd;             // Handle to our window.
     HWND                        _hWndButton;       // Handle to our window's button.
     HINSTANCE                   _hInst;            // Current instance

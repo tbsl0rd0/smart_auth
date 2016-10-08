@@ -6,7 +6,7 @@
 //
 // Copyright (c) 2006 Microsoft Corporation. All rights reserved.
 //
-// CSampleProvider implements ICredentialProvider, which is the main
+// SmartAuthProvider implements ICredentialProvider, which is the main
 // interface that logonUI uses to decide which tiles to display.
 // In this sample, we have decided to show two tiles, one for
 // Administrator and one for Guest.  You will need to decide what
@@ -23,15 +23,15 @@
 // to the user that the user can then interact with if necessary.
 
 #include <credentialprovider.h>
-#include "CSampleCredential.h"
+#include "SmartAuthCredential.h"
 #include "CommandWindow.h"
 #include "guid.h"
 
-// CSampleProvider ////////////////////////////////////////////////////////
+// SmartAuthProvider ////////////////////////////////////////////////////////
 
 
 
-CSampleProvider::CSampleProvider():
+SmartAuthProvider::SmartAuthProvider():
     _cRef(1),
     _pkiulSetSerialization(NULL),
     _dwNumCreds(0),
@@ -53,7 +53,7 @@ CSampleProvider::CSampleProvider():
 	//하드추가
 }
 
-CSampleProvider::~CSampleProvider()
+SmartAuthProvider::~SmartAuthProvider()
 {
 	//하드 부분
 	if (_pCredential != NULL)
@@ -78,7 +78,7 @@ CSampleProvider::~CSampleProvider()
     DllRelease();
 }
 
-void CSampleProvider::_CleanupSetSerialization()
+void SmartAuthProvider::_CleanupSetSerialization()
 {
     if (_pkiulSetSerialization)
     {
@@ -94,7 +94,7 @@ void CSampleProvider::_CleanupSetSerialization()
 
 // This method acts as a callback for the hardware emulator. When it's called, it simply
 // tells the infrastructure that it needs to re-enumerate the credentials.
-void CSampleProvider::OnConnectStatusChanged()
+void SmartAuthProvider::OnConnectStatusChanged()
 {
 	if (_pcpe != NULL)
 	{
@@ -107,7 +107,7 @@ void CSampleProvider::OnConnectStatusChanged()
 // in a subsequent call.  
 //
 // This sample only handles the logon and unlock scenarios as those are the most common.
-HRESULT CSampleProvider::SetUsageScenario(
+HRESULT SmartAuthProvider::SetUsageScenario(
     CREDENTIAL_PROVIDER_USAGE_SCENARIO cpus,
     DWORD dwFlags
     )
@@ -132,7 +132,7 @@ HRESULT CSampleProvider::SetUsageScenario(
 			{
 				// For the locked case, a more advanced credprov might only enumerate tiles for the 
 				// user whose owns the locked session, since those are the only creds that will work
-				_pCredential = new CSampleCredential();
+				_pCredential = new SmartAuthCredential();
 				if (_pCredential != NULL)
 				{
 					_pMessageCredential = new CMessageCredential();
@@ -144,7 +144,7 @@ HRESULT CSampleProvider::SetUsageScenario(
 							// Initialize each of the object we've just created. 
 							// - The CCommandWindow needs a pointer to us so it can let us know 
 							// when to re-enumerate credentials.
-							// - The CSampleCredential needs field descriptors.
+							// - The SmartAuthCredential needs field descriptors.
 							// - The CMessageCredential needs field descriptors and a message.
 							hr = _pCommandWindow->Initialize(this);
 							if (SUCCEEDED(hr))
@@ -257,13 +257,13 @@ HRESULT CSampleProvider::SetUsageScenario(
 //
 // Since this sample doesn't support CPUS_CREDUI, we have not implemented the credui specific
 // pieces of this function.  For information on that, please see the credUI sample.
-STDMETHODIMP CSampleProvider::SetSerialization(
+STDMETHODIMP SmartAuthProvider::SetSerialization(
     const CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION* pcpcs
     )
 {
     HRESULT hr = E_INVALIDARG;
-
-    if ((CLSID_CSampleProvider == pcpcs->clsidCredentialProvider))
+	
+    if ((CLSID_SmartAuthProvider == pcpcs->clsidCredentialProvider))
     {
         // Get the current AuthenticationPackageID that we are supporting
         ULONG ulAuthPackage;
@@ -315,7 +315,7 @@ STDMETHODIMP CSampleProvider::SetSerialization(
 
 // Called by LogonUI to give you a callback.  Providers often use the callback if they
 // some event would cause them to need to change the set of tiles that they enumerated
-HRESULT CSampleProvider::Advise(
+HRESULT SmartAuthProvider::Advise(
     ICredentialProviderEvents* pcpe,
     UINT_PTR upAdviseContext
     )
@@ -337,7 +337,7 @@ HRESULT CSampleProvider::Advise(
 }
 
 // Called by LogonUI when the ICredentialProviderEvents callback is no longer valid.
-HRESULT CSampleProvider::UnAdvise()
+HRESULT SmartAuthProvider::UnAdvise()
 {
 	if (rf.REG_HardwareAuth == '1') {
 		if (_pcpe != NULL)
@@ -356,7 +356,7 @@ HRESULT CSampleProvider::UnAdvise()
 // to have different fields from the other tiles you enumerate for a given usage
 // scenario you must include them all in this count and then hide/show them as desired 
 // using the field descriptors.
-HRESULT CSampleProvider::GetFieldDescriptorCount(
+HRESULT SmartAuthProvider::GetFieldDescriptorCount(
     DWORD* pdwCount
     )
 {
@@ -377,7 +377,7 @@ HRESULT CSampleProvider::GetFieldDescriptorCount(
 }
 
 // Gets the field descriptor for a particular field
-HRESULT CSampleProvider::GetFieldDescriptorAt(
+HRESULT SmartAuthProvider::GetFieldDescriptorAt(
 	DWORD dwIndex,
 	CREDENTIAL_PROVIDER_FIELD_DESCRIPTOR** ppcpfd
 )
@@ -435,7 +435,7 @@ HRESULT CSampleProvider::GetFieldDescriptorAt(
 // If *pbAutoLogonWithDefault is TRUE, LogonUI will immediately call GetSerialization
 // on the credential you've specified as the default and will submit that credential
 // for authentication without showing any further UI.
-HRESULT CSampleProvider::GetCredentialCount(
+HRESULT SmartAuthProvider::GetCredentialCount(
     DWORD* pdwCount,
     DWORD* pdwDefault,
     BOOL* pbAutoLogonWithDefault
@@ -486,7 +486,7 @@ HRESULT CSampleProvider::GetCredentialCount(
 
 // Returns the credential at the index specified by dwIndex. This function is called by logonUI to enumerate
 // the tiles.
-HRESULT CSampleProvider::GetCredentialAt(
+HRESULT SmartAuthProvider::GetCredentialAt(
     DWORD dwIndex, 
     ICredentialProviderCredential** ppcpc
     )
@@ -520,7 +520,7 @@ HRESULT CSampleProvider::GetCredentialAt(
 }
 
 // Creates a Credential with the SFI_USERNAME field's value set to pwzUsername.
-HRESULT CSampleProvider::_EnumerateOneCredential(
+HRESULT SmartAuthProvider::_EnumerateOneCredential(
     DWORD dwCredentialIndex,
     PCWSTR pwzUsername
     )
@@ -528,13 +528,13 @@ HRESULT CSampleProvider::_EnumerateOneCredential(
     HRESULT hr;
 
     // Allocate memory for the new credential.
-	CSampleCredential* ppc;
+	SmartAuthCredential* ppc;
 	// 하드 추가
 	if (rf.REG_HardwareAuth == '1') {
 		ppc = _pCredential;
 	}
 	// 하드 추가
-	else ppc = new CSampleCredential();
+	else ppc = new SmartAuthCredential();
     
     if (ppc)
     {
@@ -566,7 +566,7 @@ HRESULT CSampleProvider::_EnumerateOneCredential(
 
 // Sets up all the credentials for this provider. Since we always show the same tiles, 
 // we just set it up once.
-HRESULT CSampleProvider::_EnumerateCredentials()
+HRESULT SmartAuthProvider::_EnumerateCredentials()
 {
 	// User name Registry 획득
 	HKEY hKey;
@@ -594,11 +594,11 @@ HRESULT CSampleProvider::_EnumerateCredentials()
 }
 
 // Boilerplate code to create our provider.
-HRESULT CSampleProvider_CreateInstance(REFIID riid, void** ppv)
+HRESULT SmartAuthProvider_CreateInstance(REFIID riid, void** ppv)
 {
     HRESULT hr;
 
-    CSampleProvider* pProvider = new CSampleProvider();
+    SmartAuthProvider* pProvider = new SmartAuthProvider();
 
     if (pProvider)
     {
@@ -615,7 +615,7 @@ HRESULT CSampleProvider_CreateInstance(REFIID riid, void** ppv)
 
 // This enumerates a tile for the info in _pkiulSetSerialization.  See the SetSerialization function comment for
 // more information.
-HRESULT CSampleProvider::_EnumerateSetSerialization()
+HRESULT SmartAuthProvider::_EnumerateSetSerialization()
 {
     KERB_INTERACTIVE_LOGON* pkil = &_pkiulSetSerialization->Logon;
 
@@ -634,7 +634,7 @@ HRESULT CSampleProvider::_EnumerateSetSerialization()
     WCHAR wszPassword[MAX_PATH] = {0};
 
     // since this sample assumes local users, we'll ignore domain.  If you wanted to handle the domain
-    // case, you'd have to update CSampleCredential::Initialize to take a domain.
+    // case, you'd have to update SmartAuthCredential::Initialize to take a domain.
     HRESULT hr = StringCbCopyNW(wszUsername, sizeof(wszUsername), pkil->UserName.Buffer, pkil->UserName.Length);
 
     if (SUCCEEDED(hr))
@@ -643,7 +643,7 @@ HRESULT CSampleProvider::_EnumerateSetSerialization()
 
         if (SUCCEEDED(hr))
         {
-            CSampleCredential* pCred = new CSampleCredential();
+            SmartAuthCredential* pCred = new SmartAuthCredential();
 
             if (pCred)
             {

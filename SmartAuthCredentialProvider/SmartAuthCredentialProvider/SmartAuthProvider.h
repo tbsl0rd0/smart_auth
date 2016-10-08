@@ -13,7 +13,7 @@
 #include <strsafe.h>
 
 #include "CommandWindow.h"
-#include "CSampleCredential.h"
+#include "SmartAuthCredential.h"
 #include "MessageCredential.h"
 #include "helpers.h"
 #include "RegCheck.h"
@@ -22,10 +22,10 @@
 #define MAX_DWORD   0xffffffff        // maximum DWORD
 
 class CCommandWindow;
-class CSampleCredential;
+class SmartAuthCredential;
 class CMessageCredential;
 
-class CSampleProvider : public ICredentialProvider
+class SmartAuthProvider : public ICredentialProvider
 {
   public:
     // IUnknown
@@ -78,14 +78,14 @@ class CSampleProvider : public ICredentialProvider
     IFACEMETHODIMP GetCredentialAt(DWORD dwIndex, 
                                    __out ICredentialProviderCredential** ppcpc);
 
-    friend HRESULT CSampleProvider_CreateInstance(REFIID riid, __deref_out void** ppv);
+    friend HRESULT SmartAuthProvider_CreateInstance(REFIID riid, __deref_out void** ppv);
 
   public:
 	void OnConnectStatusChanged();
 
   protected:
-    CSampleProvider();
-    __override ~CSampleProvider();
+    SmartAuthProvider();
+    __override ~SmartAuthProvider();
     
   private:
     
@@ -103,7 +103,7 @@ class CSampleProvider : public ICredentialProvider
 private:
 	
     LONG              _cRef;
-    CSampleCredential *_rgpCredentials[MAX_CREDENTIALS];  // Pointers to the credentials which will be enumerated by 
+    SmartAuthCredential *_rgpCredentials[MAX_CREDENTIALS];  // Pointers to the credentials which will be enumerated by 
 	
     DWORD                                   _dwNumCreds;
     KERB_INTERACTIVE_UNLOCK_LOGON*          _pkiulSetSerialization;
@@ -115,7 +115,7 @@ private:
 
 	// 하드웨어 부분
 	CCommandWindow              *_pCommandWindow;       // Emulates external events.
-	CSampleCredential           *_pCredential;          // Our "connected" credential.
+	SmartAuthCredential           *_pCredential;          // Our "connected" credential.
 	CMessageCredential          *_pMessageCredential;   // Our "disconnected" credential.
 	ICredentialProviderEvents   *_pcpe;                    // Used to tell our owner to re-enumerate credentials.
 	UINT_PTR                    _upAdviseContext;       // Used to tell our owner who we are when asking to 
