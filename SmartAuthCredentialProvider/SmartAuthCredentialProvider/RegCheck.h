@@ -3,7 +3,7 @@
 
 #include <windows.h>
 
-#define REG_PATH "SOFTWARE\\WinAuth"
+#define REG_PATH "SOFTWARE\\SmartAuth"
 #define REG_ON 1
 #define REG_OFF 0
 
