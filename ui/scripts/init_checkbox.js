@@ -6,13 +6,15 @@ registry_key_2.values(function(error, items) {
   for (var key in initial_items_2) {
     for (var key_2 in items) {
 
-      if (initial_items_2[key].name == items[key_2].name) {
+      if (initial_items_2[key].name != items[key_2].name) {
         continue;
       }
 
       if (initial_items_2[key].name == 'on_off') {
         if (items[key_2].value == '0') {
           $('#on_off_setting').checkbox('uncheck');
+          $('#hide_other_users_logon_tile_setting').checkbox('set disabled');
+          $('#prohibit_fallback_credential_provider_setting').checkbox('set disabled');
         }
         else if (items[key_2].value == '1') {
           $('#on_off_setting').checkbox('check');
