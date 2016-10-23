@@ -1,1 +1,1 @@
-nw-gyp rebuild --target=0.16.1 --arch=x64
+nw-gyp rebuild --target=0.18.2 --arch=x64

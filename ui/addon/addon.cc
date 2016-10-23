@@ -17,7 +17,7 @@ void Method(const FunctionCallbackInfo<Value>& args) {
 	GetUserNameW(username, &size);
 
   HKEY key;
-  RegOpenKeyW(HKEY_LOCAL_MACHINE, L"Software\\WinAuth\\", &key);
+  RegOpenKeyW(HKEY_LOCAL_MACHINE, L"Software\\SmartAuth\\", &key);
   RegSetValueExW(key, L"UserName", 0, REG_SZ, (const BYTE *)username, (DWORD)(wcslen(username) * sizeof WCHAR));
   RegCloseKey(key);
 }
@@ -66,7 +66,7 @@ void Method2(const FunctionCallbackInfo<Value>& args) {
 }
 
 void init(Local<Object> exports) {
-  NODE_SET_METHOD(exports, "set_current_user_name_to_registry", Method);
+  NODE_SET_METHOD(exports, "set_current_user_name", Method);
   NODE_SET_METHOD(exports, "hide_other_users", Method2);
 }
 
