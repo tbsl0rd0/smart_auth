@@ -141,8 +141,20 @@ $('#hide_other_users_logon_tile_setting').checkbox({
 $('#prohibit_fallback_credential_provider_setting').checkbox({
   onChecked: function() {
     registry_key_2.set('prohibit_fallback_credential_provider', 'REG_SZ', '1', function() {});
+
+    var registry_key_3 = new winreg({
+      hive: winreg.HKLM,
+      key: '\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Authentication\\Credential Providers'
+    });
+    registry_key_3.set('ProhibitFallbacks', 'REG_DWORD', 1, function() {});
   },
   onUnchecked: function() {
     registry_key_2.set('prohibit_fallback_credential_provider', 'REG_SZ', '0', function() {});
+
+    var registry_key_3 = new winreg({
+      hive: winreg.HKLM,
+      key: '\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Authentication\\Credential Providers'
+    });
+    registry_key_3.set('ProhibitFallbacks', 'REG_DWORD', 0, function() {});
   }
 });
