@@ -1,0 +1,1 @@
+copy .\build\Release\addon.node ..\
