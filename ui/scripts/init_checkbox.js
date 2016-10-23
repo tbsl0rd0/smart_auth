@@ -120,9 +120,21 @@ $('#on_off_setting').checkbox({
 $('#hide_other_users_logon_tile_setting').checkbox({
   onChecked: function() {
     registry_key_2.set('hide_other_users_logon_tile', 'REG_SZ', '1', function() {});
+
+    var registry_key_3 = new winreg({
+      hive: winreg.HKLM,
+      key: '\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System'
+    });
+    registry_key_3.set('ExcludedCredentialProviders', 'REG_SZ', '{6f45dc1e-5384-457a-bc13-2cd81b0d28ed}', function() {});
   },
   onUnchecked: function() {
     registry_key_2.set('hide_other_users_logon_tile', 'REG_SZ', '0', function() {});
+
+    var registry_key_3 = new winreg({
+      hive: winreg.HKLM,
+      key: '\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System'
+    });
+    registry_key_3.set('ExcludedCredentialProviders', 'REG_SZ', '', function() {});
   }
 });
 
