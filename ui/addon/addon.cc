@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <Windows.h>
+#include <Lmcons.h>
 
 using v8::FunctionCallbackInfo;
 using v8::Isolate;
@@ -11,38 +12,14 @@ using v8::String;
 using v8::Value;
 
 void Method(const FunctionCallbackInfo<Value>& args) {
-  FILE* file;
-  char output[300];
-  char *command = "whoami";
-  file = _popen(command, "r");
-  fread(output, 1, sizeof(output), file);
-  fclose(file);
-
-  int j = 0;
-  int is_found = 0;
-  char output_2[300] = {0};
-  for (int i=0;i<300;i++) {
-    if (output[i] == 10) {
-      break;
-    }
-    if (output[i] == '\\') {
-      is_found = 1;
-      continue;
-    }
-    if (is_found == 0) {
-      continue;
-    }
-    output_2[j] = output[i];
-    j++;
-  }
+  WCHAR username[UNLEN + 1];
+	DWORD size = UNLEN + 1;
+	GetUserNameW(username, &size);
 
   HKEY key;
-  RegOpenKey(HKEY_LOCAL_MACHINE, (LPCTSTR)"Software\\WinAuth\\", &key);
-  RegSetValueEx(key, (LPCTSTR)"UserName", 0, REG_SZ, (LPBYTE)output_2, strlen(output_2) * sizeof(char));
+  RegOpenKeyW(HKEY_LOCAL_MACHINE, L"Software\\SmartAuth\\", &key);
+  RegSetValueExW(key, L"UserName", 0, REG_SZ, (const BYTE *)username, (DWORD)(wcslen(username) * sizeof WCHAR));
   RegCloseKey(key);
-
-  Isolate* isolate = args.GetIsolate();
-  args.GetReturnValue().Set(String::NewFromUtf8(isolate, output_2));
 }
 
 void Method2(const FunctionCallbackInfo<Value>& args) {
@@ -89,7 +66,7 @@ void Method2(const FunctionCallbackInfo<Value>& args) {
 }
 
 void init(Local<Object> exports) {
-  NODE_SET_METHOD(exports, "set_current_user_name_to_registry", Method);
+  NODE_SET_METHOD(exports, "set_current_user_name", Method);
   NODE_SET_METHOD(exports, "hide_other_users", Method2);
 }
 
