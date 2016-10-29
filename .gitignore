@@ -318,5 +318,5 @@ jspm_packages
 .node_repl_history
 
 addon.node
-SampleCredentialProvider.dll
 google_otp_key_generator.exe
+ui/SmartAuthCredentialProvider.dll
