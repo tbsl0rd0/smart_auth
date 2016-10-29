@@ -123,7 +123,6 @@ HRESULT SmartAuthProvider::SetUsageScenario(
 	{
 	case CPUS_LOGON:
 	case CPUS_CREDUI:
-	case CPUS_UNLOCK_WORKSTATION:
 		_cpus = cpus;
 		
 		if (rf.REG_HardwareAuth == '1') {
@@ -232,6 +231,7 @@ HRESULT SmartAuthProvider::SetUsageScenario(
 		}
 		break;
 
+	case CPUS_UNLOCK_WORKSTATION:
 	case CPUS_CHANGE_PASSWORD:
 	     hr = E_NOTIMPL;
 		 break;
