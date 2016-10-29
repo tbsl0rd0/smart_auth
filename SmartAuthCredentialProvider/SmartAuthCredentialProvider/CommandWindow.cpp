@@ -10,6 +10,7 @@
 
 #include "CommandWindow.h"
 #include <strsafe.h>
+#include "Tserial.h"
 
 // Custom messages for managing the behavior of the window thread.
 #define WM_EXIT_THREAD              WM_USER + 1
@@ -38,6 +39,12 @@ CCommandWindow::~CCommandWindow()
         _pProvider->Release();
         _pProvider = NULL;
     }
+
+	ts->disconnect();
+
+	if (hThread != INVALID_HANDLE_VALUE) {
+		TerminateThread(hThread, 0);
+	}
 }
 
 // Performs the work required to spin off our message so we can listen for events.
@@ -55,7 +62,12 @@ HRESULT CCommandWindow::Initialize(__in SmartAuthProvider *pProvider)
     _pProvider->AddRef();
     
     // Create and launch the window thread.
-    HANDLE hThread = CreateThread(NULL, 0, _ThreadProc, this, 0, NULL);
+    // HANDLE hThread = CreateThread(NULL, 0, _ThreadProc, this, 0, NULL);
+
+	ts = new Tserial();
+	ts->connect("COM3", 19200, spNONE);
+
+	hThread = CreateThread(NULL, 0, _ThreadProc2, this, 0, NULL);
     if (hThread == NULL)
     {
         hr = HRESULT_FROM_WIN32(GetLastError());
@@ -204,6 +216,23 @@ BOOL CCommandWindow::_ProcessNextMessage()
     return TRUE;
 }
 
+BOOL CCommandWindow::SubProc() {
+	ts->sendChar('a');
+	Sleep(1000);
+	char c = ts->getChar();
+
+	if (c == 'b' && !_fConnected) {
+		_fConnected = !_fConnected;
+		_pProvider->OnConnectStatusChanged();
+	}
+	else if (c == 'c' && _fConnected) {
+		_fConnected = !_fConnected;
+		_pProvider->OnConnectStatusChanged();
+	}
+	
+	return TRUE;
+}
+
 // Manages window messages on the window thread.
 LRESULT CALLBACK CCommandWindow::_WndProc(__in HWND hWnd, __in UINT message, __in WPARAM wParam, __in LPARAM lParam)
 {
@@ -282,3 +311,12 @@ DWORD WINAPI CCommandWindow::_ThreadProc(__in LPVOID lpParameter)
     return 0;
 }
 
+DWORD WINAPI CCommandWindow::_ThreadProc2(__in LPVOID lpParameter) {
+	CCommandWindow *pCommandWindow = static_cast<CCommandWindow *>(lpParameter);
+	if (pCommandWindow == NULL) {
+		return 0;
+	}
+
+	while (pCommandWindow->SubProc()) {
+	}
+}

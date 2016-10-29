@@ -17,10 +17,48 @@ new Sortable(element, {
     else {
       registry_key.set(item.getAttribute("value"), 'REG_SZ', '1', function(error) {});
     }
+    setTimeout(function() {
+      var is_donglein = false;
+      var is_smart_id_card = false;
+      registry_key.values(function(error, items) {
+        for (var key in items) {
+          if (items[key].name == 'Donglein' && items[key].value == '1') {
+            is_donglein = true;
+          }
+          if (items[key].name == 'SmartIDCard' && items[key].value == '1') {
+            is_smart_id_card = true;
+          }
+        }
+      });
+      setTimeout(function() {
+        if (is_donglein || is_smart_id_card) {
+          registry_key.set('HardwareAuth', 'REG_SZ', '1', function(error) {});
+        }
+      }, 200);
+    }, 200);
   },
   onRemove: function(event) {
     var item = event.item;
     registry_key.set(item.getAttribute("value"), 'REG_SZ', '0', function(error) {});
+    setTimeout(function() {
+      var is_donglein = false;
+      var is_smart_id_card = false;
+      registry_key.values(function(error, items) {
+        for (var key in items) {
+          if (items[key].name == 'Donglein' && items[key].value == '1') {
+            is_donglein = true;
+          }
+          if (items[key].name == 'SmartIDCard' && items[key].value == '1') {
+            is_smart_id_card = true;
+          }
+        }
+      });
+      setTimeout(function() {
+        if (is_donglein == false && is_smart_id_card == false) {
+          registry_key.set('HardwareAuth', 'REG_SZ', '0', function(error) {});
+        }
+      }, 200);
+    }, 200);
   }
 });
 

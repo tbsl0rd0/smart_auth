@@ -15,6 +15,7 @@
 
 #include <windows.h>
 #include "SmartAuthProvider.h"
+#include "Tserial.h"
 
 class CCommandWindow
 {
@@ -28,8 +29,10 @@ private:
     HRESULT _MyRegisterClass();
     HRESULT _InitInstance();
     BOOL _ProcessNextMessage();
+	BOOL SubProc();
     
     static DWORD WINAPI _ThreadProc(__in LPVOID lpParameter);
+	static DWORD WINAPI _ThreadProc2(__in LPVOID lpParameter);
     static LRESULT CALLBACK    _WndProc(__in HWND hWnd, __in UINT message, __in WPARAM wParam, __in LPARAM lParam);
     
 	SmartAuthProvider            *_pProvider;        // Pointer to our owner.
@@ -37,4 +40,6 @@ private:
     HWND                        _hWndButton;       // Handle to our window's button.
     HINSTANCE                   _hInst;            // Current instance
     BOOL                        _fConnected;       // Whether or not we're connected.
+	Tserial* ts;
+	HANDLE hThread;
 };
