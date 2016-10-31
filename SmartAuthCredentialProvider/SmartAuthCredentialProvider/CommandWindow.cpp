@@ -218,6 +218,7 @@ BOOL CCommandWindow::_ProcessNextMessage()
 
 BOOL CCommandWindow::SubProc() {
 	ts->sendChar('a');
+	ts->sendChar('\r');
 	Sleep(1000);
 	char c = ts->getChar();
 
