@@ -10,7 +10,7 @@
 
 #include "CommandWindow.h"
 #include <strsafe.h>
-#include "Tserial.h"
+#include "SerialClass.h"
 
 // Custom messages for managing the behavior of the window thread.
 #define WM_EXIT_THREAD              WM_USER + 1
@@ -40,8 +40,6 @@ CCommandWindow::~CCommandWindow()
         _pProvider = NULL;
     }
 
-	ts->disconnect();
-
 	if (hThread != INVALID_HANDLE_VALUE) {
 		TerminateThread(hThread, 0);
 	}
@@ -63,10 +61,6 @@ HRESULT CCommandWindow::Initialize(__in SmartAuthProvider *pProvider)
     
     // Create and launch the window thread.
     // HANDLE hThread = CreateThread(NULL, 0, _ThreadProc, this, 0, NULL);
-
-	ts = new Tserial();
-	ts->connect("COM3", 19200, spNONE);
-
 	hThread = CreateThread(NULL, 0, _ThreadProc2, this, 0, NULL);
     if (hThread == NULL)
     {
@@ -216,17 +210,22 @@ BOOL CCommandWindow::_ProcessNextMessage()
     return TRUE;
 }
 
-BOOL CCommandWindow::SubProc() {
-	ts->sendChar('a');
-	ts->sendChar('\r');
-	Sleep(1000);
-	char c = ts->getChar();
+BOOL CCommandWindow::SubProc(Serial* SP) {
+	SP->WriteData("a\r", 2);
 
-	if (c == 'b' && !_fConnected) {
+	Sleep(200);
+
+	char incomingData[256] = "";
+	int dataLength = 255;
+	int readResult = 0;
+	readResult = SP->ReadData(incomingData, dataLength);
+	incomingData[readResult] = 0;
+
+	if (strcmp(incomingData, "b") == 0 && !_fConnected) {
 		_fConnected = !_fConnected;
 		_pProvider->OnConnectStatusChanged();
 	}
-	else if (c == 'c' && _fConnected) {
+	else if (strcmp(incomingData, "c") == 0 && _fConnected) {
 		_fConnected = !_fConnected;
 		_pProvider->OnConnectStatusChanged();
 	}
@@ -318,6 +317,8 @@ DWORD WINAPI CCommandWindow::_ThreadProc2(__in LPVOID lpParameter) {
 		return 0;
 	}
 
-	while (pCommandWindow->SubProc()) {
+	Serial* SP = new Serial("\\\\.\\COM3");
+
+	while (pCommandWindow->SubProc(SP)) {
 	}
 }

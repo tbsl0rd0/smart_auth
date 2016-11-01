@@ -156,7 +156,7 @@ void loop(){
         outBuffer[outBufferPosition] = c;
         outBufferPosition ++;
     }
-    BTSerial.write(c);
+    //BTSerial.write(c);
   }
 }
 String getUUID(String buffer, char seperator){
