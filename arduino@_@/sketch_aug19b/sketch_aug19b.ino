@@ -1,6 +1,6 @@
 #include <SoftwareSerial.h>
 #include <math.h>
-#include <QueueList.h>
+#include "Timer.h"
 
   SoftwareSerial BTSerial(4, 5);
   byte inBuffer[128];
@@ -9,22 +9,20 @@
   byte outBuffer[128];
   int outBufferPosition;
   
-  boolean temp = false;
+  boolean scanned = false;
   boolean scanning = false;
-
-  QueueList<int> queue;
+  boolean init1 = false;
 
   int save[5];
   int loc;
+
+  Timer t;
+  int timerID;
   
 void setup(){
   BTSerial.begin(19200); 
-  Serial.begin(19200); 
-  
-  pinMode(13, OUTPUT);
-  digitalWrite(13, LOW);
-  
-  Serial.println("Hello!");
+  Serial.begin(19200);   
+  //Serial.println("Hello!");
   
   inBufferPosition = 0;
   outBufferPosition = 0;
@@ -33,13 +31,39 @@ void setup(){
     save[i] = 0;
   }
   loc = 0;
+
+  timerID = t.every(500, initAT);
 }
 
 void loop(){
+  t.update();
   if (BTSerial.available()){ // receive from ble    
     char c = BTSerial.read();
     
     if(c == '\r'){
+      
+      if(init1 == false){
+        inBuffer[inBufferPosition] = 0;
+        
+        String message = inBuffer;
+        message.trim();
+        message.toLowerCase();
+        
+        if(message.equals("")){
+          return;
+        }
+        else{
+          if(message.equals("ok")){
+              t.stop(timerID);
+              BTSerial.write("at+reqscan0\r");
+              //
+              //Serial.println("++ at+reqscan0 ++");
+              //
+              timerID = t.after(100, startScanning);
+          }
+        }
+      }
+      else{
         inBuffer[inBufferPosition] = 0;
         
         String message = inBuffer;
@@ -51,8 +75,15 @@ void loop(){
         else{
           if(scanning == true){
             if(message.equals("ready")){
-              Serial.println(message);
+              //
+              //Serial.println(message);
+              //
               scanning = false;
+              scanned = false;
+              if(timerID >= 0){
+                t.stop(timerID);
+                timerID = -1;
+              }
             }
             else{
               String UUID = getUUID(message, ',');
@@ -72,14 +103,22 @@ void loop(){
                 
                 float distance = calcDistance(avgRssi, -59);
                 if(distance <= 4.0){
-                  Serial.print("NEAR!! @ ");
+                  //
+                  //Serial.println("NEAR!! @ ");
+                  //
+                  scanned = true;
+                  if(timerID >= 0){
+                    t.stop(timerID);
+                  }
+                  timerID = t.every(3000, notScanned); 
+                  //Serial.print("b");
                 }
-                Serial.println(distance);
+                //Serial.println(distance);
               }
             }
           }
-          else{
-            Serial.println(message);
+          else{ // if scanning is false
+            //Serial.println(message);
             if(message.equals("scanning")){
               scanning = true;
             }
@@ -87,8 +126,9 @@ void loop(){
         }
         inBufferPosition = 0;
         inBuffer[0] = 0;
+      }
     }
-    else{
+    else{ // not \r
       inBuffer[inBufferPosition] = c;
       inBufferPosition ++;
     }
@@ -99,6 +139,15 @@ void loop(){
         outBuffer[outBufferPosition] = 0;
         String message = outBuffer;
         message.toLowerCase();
+
+        if(message.equals("a")){
+          if(scanned == false){
+            Serial.write("c");
+          }
+          else if(scanned == true){
+            Serial.write("b");
+          }
+        }
         
         outBufferPosition = 0;
         outBuffer[0] = 0;
@@ -110,22 +159,6 @@ void loop(){
     BTSerial.write(c);
   }
 }
-/*
-String* split(String buffer, char seperator, int num){
-  String returnStr[num];
-  int loc = 0;
-  int oldLoc = 0;
-  for(int i = 0; i < num; i++){
-    if((loc = buffer.indexOf(seperator, oldLoc)) == -1){
-      loc = buffer.length();
-    }
-    returnStr[i] = buffer.substring(oldLoc, loc);
-    Serial.println(returnStr[i]);
-    oldLoc = loc + 1;
-  }
-  return returnStr;
-}
-*/
 String getUUID(String buffer, char seperator){
   String UUID;
   int loc = buffer.indexOf(seperator);
@@ -155,19 +188,6 @@ float calcDistance(float txPower, double rssi){
     return dis;
   }
 }
-/*
-float averageDistance(QueueList<int> q){
-  float avg;
-  int cnt = q.count();
-  for(int i = 0; i < cnt; i++){
-    int pop = q.pop();
-    avg += pop;
-    q.push(pop);
-  }
-  avg /= cnt;
-  return avg;
-}
-*/
 float averageDistanceArray(int s[]){
   float avg;
   
@@ -177,3 +197,26 @@ float averageDistanceArray(int s[]){
   avg /= 5;
   return avg;
 }
+void notScanned(){
+  //Serial.println("false!");
+  scanned = false;
+  t.stop(timerID);
+}
+void initAT(){
+  //
+    //Serial.println("initAT");
+    //
+    BTSerial.write("at\r");
+}
+void startScanning(){
+  //
+    //Serial.println("startScanning");
+    //
+    BTSerial.write("at+reqscan1\r"); 
+    init1 = true;
+    //
+    //Serial.println("++ at+reqscan1 ++"); 
+    //
+    //init1 = true;
+}
+
