@@ -45,7 +45,7 @@ void loop(){
       if(init1 == false){
         inBuffer[inBufferPosition] = 0;
         
-        String message = inBuffer;
+        String message = (char*)inBuffer;
         message.trim();
         message.toLowerCase();
         
@@ -66,7 +66,7 @@ void loop(){
       else{
         inBuffer[inBufferPosition] = 0;
         
-        String message = inBuffer;
+        String message = (char*)inBuffer;
         message.trim();
         message.toLowerCase();
         if(message.equals("")){
@@ -137,7 +137,7 @@ void loop(){
     char c = Serial.read();
     if(c == '\r'){
         outBuffer[outBufferPosition] = 0;
-        String message = outBuffer;
+        String message = (char*)outBuffer;
         message.toLowerCase();
 
         if(message.equals("a")){
