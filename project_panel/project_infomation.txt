@@ -1,17 +1,17 @@
 개요 :
 
 윈도우 로그온 시 여러 인증 수단을 제공하고 선택하여 사용할 수 있도록 하는 프로그램입니다.
-Smart ID Card와 Donglein은 저희가 개발한 인증 수단입니다.
+특히 Smart ID Card와 Donglein은 저희가 개발한 인증 수단입니다.
 
 
 
 주요 기능:
 
 - Donglein 인증 : 일반 USB 저장장치의 MBR 영역에 키를 저장하여 동글처럼 인증
-- Smart ID Card 인증 : PC와의 거리를 기반으로 인증
-- Google OTP 인증 : 원타임 패스워드를 이용한 인증
+- Smart ID Card 인증 : 아두이노와 BLE를 이용하여 PC와의 거리를 기반으로 인증
+- Google OTP 인증 : one-time password를 이용한 인증
 
-이런 인증 요소들을 선택하여 사용할 수 있습니다.
+사용자는 위의 인증 요소들을 선택하여 사용할 수 있습니다.
 
 
 
@@ -20,5 +20,5 @@ Smart ID Card와 Donglein은 저희가 개발한 인증 수단입니다.
 
 - 운영체제 : Windows 7
 - 언어 : C/C++, HTML, Javascript, CSS
-- UI 프레임워크 : Electron
-- 임베디드 시스템 : 아두이노 Uno r3, FBL780BC_H (Bluetooth 4.1)
+- UI 프레임워크 : Node.js, Electron
+- 임베디드 시스템 : 아두이노 Uno R3, FBL780BC_H (Bluetooth 4.1)
