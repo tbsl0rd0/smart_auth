@@ -1,0 +1,90 @@
+<html>
+<head>
+  <link rel="stylesheet" href="public/semantic/semantic.min.css">
+</head>
+<body style="background-color: rgba(255, 255, 255, 0.0);">
+  <div style="width: 250px;">
+    <img class="ui image small circular" src="images/logo.png" style="margin: 0 auto 0 auto;">
+    <div class="ui divider"></div>
+    <div class="ui teal progress" id="initialization_progress">
+      <div class="bar"></div>
+      <div class="label">
+        ready for running...
+      </div>
+    </div>
+  </div>
+
+  <script>
+  window.$ = window.jQuery = require('./public/jquery/jquery.min.js');
+  </script>
+
+  <script src="public/semantic/semantic.min.js"></script>
+
+  <script>
+  const addon = require('./addon');
+  const {ipcRenderer} = require('electron');
+
+  $('#initialization_progress').progress({
+    total: 6
+  });
+
+  setTimeout(() => {
+    $('#initialization_progress').progress('increment');
+    $('#initialization_progress').progress('set label', 'create registry keys...');
+
+    addon.create_registry_keys();
+
+    setTimeout(() => {
+      $('#initialization_progress').progress('increment');
+      $('#initialization_progress').progress('set label', 'set initial registry values...');
+
+      addon.set_initial_registry_values();
+
+      setTimeout(() => {
+        $('#initialization_progress').progress('increment');
+        $('#initialization_progress').progress('set label', 'get authentication factor registry values...');
+
+        let authentication_factors = {};
+
+        let t = ['Donglein', 'GoogleOTP', 'SmartIDCard'];
+        for (let i in t) {
+          authentication_factors[t[i]] = addon.get_authentication_factor_registry_value(i);
+        }
+
+        ipcRenderer.sendSync('set_authentication_factors', authentication_factors);
+
+        setTimeout(() => {
+          $('#initialization_progress').progress('increment');
+          $('#initialization_progress').progress('set label', 'get setting registry values...');
+
+          let settings = {};
+
+          let t = ['on_off', 'hide_other_users_logon_tiles', 'prohibit_fallback_credential_provider'];
+          for (let i in t) {
+            settings[t[i]] = addon.get_setting_registry_value(i);
+          }
+
+          ipcRenderer.sendSync('set_settings', settings);
+
+          setTimeout(() => {
+            $('#initialization_progress').progress('increment');
+            $('#initialization_progress').progress('set label', 'copy dll, sys files...');
+
+            const fs = require('fs');
+            let file = fs.readFileSync('SmartAuthCredentialProvider.dll');
+            fs.writeFile('C:/Windows/System32/SmartAuthCredentialProvider.dll', file, () => {});
+
+            setTimeout(() => {
+              $('#initialization_progress').progress('increment');
+              $('#initialization_progress').progress('set label', 'open main window...');
+
+              ipcRenderer.send('command_to_main_process', 'open_main_window');
+            }, 200);
+          }, 200);
+        }, 200);
+      }, 200);
+    }, 200);
+  }, 200);
+  </script>
+</body>
+</html>

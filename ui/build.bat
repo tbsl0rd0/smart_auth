@@ -1,1 +1,0 @@
-nwbuild -p win64 .

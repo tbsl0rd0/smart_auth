@@ -1,0 +1,222 @@
+<html>
+<head>
+  <link rel="stylesheet" href="public/animate/animate.css">
+  <link rel="stylesheet" href="public/semantic/semantic.min.css">
+</head>
+<body>
+  <!-- modals -->
+  <div class="ui modal" id="google_otp_key_setting_modal">
+    <i class="icon close"></i>
+    <div class="header">
+      Google OTP Key Setting
+    </div>
+    <div class="image content">
+      <div class="description">
+        <h4 class="ui header">
+          OTP key is ...
+        </h4>
+        <div class="ui segment center aligned">
+          <div class="ui fade reveal">
+            <div class="visible content">
+              <p style="width: 630px; height: 30px; cursor: pointer; background-color: white;">
+                <i class="icon mouse pointer"></i>
+                Move mouse pointer over here
+              </p>
+            </div>
+            <div class="hidden content">
+              <div class="ui red mini statistic">
+                <div class="value" id="google_otp_key_setting_segment">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="actions">
+      <div class="ui teal button animated" id="google_otp_key_setting_confirm">
+        <div class="hidden content">
+          <i class="icon checkmark"></i>
+        </div>
+        <div class="content visible">
+          Confirm
+        </div>
+      </div>
+      <div class="ui button animated" id="google_otp_key_setting_cancel">
+        <div class="hidden content">
+          <i class="icon trash outline"></i>
+        </div>
+        <div class="content visible">
+          Cancel
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- title bar -->
+  <div class="ui menu attached inverted borderless" style="-webkit-app-region: drag">
+    <div class="item">
+      Smart Auth
+    </div>
+    <div class="menu right" style="-webkit-app-region: no-drag">
+      <a class="item" id="minimize_window">
+        <i class="icon minus"></i>
+      </a>
+      <a class="item title_bar" id="close_window">
+        <i class="icon remove"></i>
+      </a>
+    </div>
+  </div>
+
+  <!-- tab menu -->
+  <div class="ui menu tabular attached">
+    <div class="item">
+      <img src="images/logo.png">
+    </div>
+    <a class="item active animated_tada" id="authentication_status_tab" data-tab="tab_1">
+      <i class="red icon bar chart"></i>
+      Auth Status
+    </a>
+    <a class="item animated_tada" data-tab="tab_2">
+      <i class="red icon protect"></i>
+      Auth List Modification
+    </a>
+    <a class="item animated_tada" data-tab="tab_3">
+      <i class="red icon setting"></i>
+      Settings
+    </a>
+    <a class="item animated_tada" data-tab="tab_4">
+      <i class="red help icon"></i>
+      Help
+    </a>
+  </div>
+
+  <!-- tab contents -->
+  <!-- tab_1 -->
+  <div class="ui tab active segment attached" data-tab="tab_1" style="height: 404px;">
+    <div class="ui grid">
+      <div class="column eight wide">
+        <h3 class="ui header" style="margin-top: 30px;">
+          <i class="icon list layout"></i>
+          <div class="content">
+            Current Auth List
+          </div>
+        </h3>
+        <div class="ui steps attached vertical" id="current_authentication_factor_list" style="min-height: 30px"></div>
+        <div class="ui steps attached vertical">
+          <div class="step">
+            <i class="icon keyboard"></i>
+            <div class="content">
+              <div class="title">
+                Normal Windows Password
+              </div>
+              <div class="description">
+                Always required
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="column eight wide">
+        <h3 class="ui header" style="margin-top: 30px;">
+          <i class="icon setting"></i>
+          <div class="content">
+            Current Settings
+          </div>
+        </h3>
+      </div>
+    </div>
+  </div>
+
+  <!-- tab_2 -->
+  <div class="ui tab segment attached" data-tab="tab_2" style="height: 404px;">
+    <div class="ui grid">
+      <div class="column eight wide">
+        <h3 class="ui header" style="margin-top: 30px;">
+          <i class="icon list layout"></i>
+          <div class="content">
+            Current Auth List
+          </div>
+        </h3>
+        <div class="ui steps attached vertical" id="current_authentication_factor_list_2" style="min-height: 30px"></div>
+        <div class="ui steps attached vertical">
+          <div class="step">
+            <i class="icon keyboard"></i>
+            <div class="content">
+              <div class="title">
+                Normal Windows Password
+              </div>
+              <div class="description">
+                Always required
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="column eight wide">
+        <h3 class="ui header" style="margin-top: 30px;">
+          <i class="icon list layout"></i>
+          <div class="content">
+            Available Auth List
+          </div>
+        </h3>
+        <div class="ui steps attached vertical" id="available_authentication_factor_list" style="min-height: 30px"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- tab_3 -->
+  <div class="ui tab segment attached" data-tab="tab_3" style="height: 404px;">
+    <div class="ui segment">
+      <div class="ui form">
+        <div class="field inline">
+          <div class="ui toggle checkbox" id="on_off_checkbox">
+            <input class="hidden" tabindex="0" type="checkbox">
+            <label>
+              On / Off
+            </label>
+          </div>
+        </div>
+        <div class="field inline">
+          <div class="ui toggle checkbox" id="hide_other_users_logon_tiles_checkbox">
+            <input class="hidden" tabindex="0" type="checkbox">
+            <label>
+              Hide other users' logon tiles (Recommended)
+            </label>
+          </div>
+        </div>
+        <div class="field inline">
+          <div class="ui toggle checkbox" id="prohibit_fallback_credential_provider_checkbox">
+            <input class="hidden" tabindex="0" type="checkbox">
+            <label>
+              Prohibit fallback credential provider (Recommended)
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- tab_4 -->
+  <div class="ui tab segment attached" data-tab="tab_4" style="height: 404px;">
+
+  </div>
+
+  <script>
+  window.$ = window.jQuery = require('./public/jquery/jquery.min.js');
+  </script>
+
+  <script src="public/semantic/semantic.min.js"></script>
+  <script>
+  window.Sortable = require('./public/sortable/sortable.min.js');
+  </script>
+
+  <script src="scripts/initialize_main_window.js"></script>
+  <script src="scripts/initialize_modals.js"></script>
+  <script src="scripts/initialize_tabs.js"></script>
+  <script src="scripts/initialize_sortable.js"></script>
+  <script src="scripts/initialize_checkboxes.js"></script>
+</body>
+</html>
