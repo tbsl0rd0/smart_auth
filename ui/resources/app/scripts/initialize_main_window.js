@@ -1,6 +1,9 @@
 const addon = require('./addon');
 const {ipcRenderer} = require('electron');
 
+let authentication_factors = ipcRenderer.sendSync('get_authentication_factors', 'get_authentication_factors');
+const settings = ipcRenderer.sendSync('get_settings', 'get_settings');
+
 const authentication_factors_enumeration = {'Donglein': 0, 'GoogleOTP': 1, 'SmartIDCard': 2, 'HardwareAuth': 3};
 const settings_enumeration = {'on_off': 0, 'hide_other_users_logon_tiles': 1, 'prohibit_fallback_credential_provider': 2};
 
@@ -18,7 +21,7 @@ const donglein_item_html = '' +
 '</div>';
 
 const google_otp_item_html = '' +
-'<div class="step google_otp_item" style="cursor: move;" value="GoogleOTP">' +
+'<div class="step" style="cursor: move;" value="GoogleOTP">' +
   '<i class="icon wait"></i>' +
   '<div class="content">' +
     '<div class="title">' +
@@ -45,13 +48,10 @@ const smart_id_card_item_html = '' +
 
 const item_htmls = {'Donglein': donglein_item_html, 'GoogleOTP': google_otp_item_html, 'SmartIDCard': smart_id_card_item_html};
 
-$('#minimize_window').on('click', function() {
+$('#minimize_window').on('click', () => {
   ipcRenderer.send('command_to_main_process', 'minimize_window');
 });
 
-$('#close_window').on('click', function() {
+$('#close_window').on('click', () => {
   ipcRenderer.send('command_to_main_process', 'close_window');
 });
-
-let authentication_factors = ipcRenderer.sendSync('get_authentication_factors', 'get_authentication_factors');
-let settings = ipcRenderer.sendSync('get_settings', 'get_settings');

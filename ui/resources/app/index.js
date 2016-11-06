@@ -1,5 +1,4 @@
-const {ipcMain} = require('electron');
-const {app, BrowserWindow} = require('electron');
+const {app, ipcMain, BrowserWindow} = require('electron');
 
 let initialization_window;
 let main_window;
@@ -9,7 +8,7 @@ let settings;
 
 app.on('ready', () => {
   initialization_window = new BrowserWindow({
-    width: 320,
+    width: 350,
     height: 300,
     show: false,
     frame: false,

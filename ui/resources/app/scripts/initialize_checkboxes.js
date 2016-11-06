@@ -44,7 +44,7 @@ $('#hide_other_users_logon_tiles_checkbox').checkbox({
 
     addon.set_excluded_credential_provider_registry_value(1);
   },
-  onUnchecked: function() {
+  onUnchecked: () => {
     addon.set_setting_registry_value(settings_enumeration['hide_other_users_logon_tiles'], 0);
 
     addon.set_excluded_credential_provider_registry_value(0);
@@ -55,11 +55,11 @@ $('#prohibit_fallback_credential_provider_checkbox').checkbox({
   onChecked: () => {
     addon.set_setting_registry_value(settings_enumeration['prohibit_fallback_credential_provider'], 1);
 
-    addon.set_prohibit_fallback_credential_provider_registry_value(1);
+    addon.set_fallback_credential_provider_registry_value(1);
   },
-  onUnchecked: function() {
+  onUnchecked: () => {
     addon.set_setting_registry_value(settings_enumeration['prohibit_fallback_credential_provider'], 0);
 
-    addon.set_prohibit_fallback_credential_provider_registry_value(0);
+    addon.set_fallback_credential_provider_registry_value(0);
   }
 });

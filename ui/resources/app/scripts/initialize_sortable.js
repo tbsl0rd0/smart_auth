@@ -1,42 +1,38 @@
-let set_items = function() {
-  for (let i in authentication_factors) {
-    let html;
-    if (i == 'Donglein') {
-      html = donglein_item_html;
-    }
-    else if (i == 'GoogleOTP') {
-      html = google_otp_item_html;
-    }
-    else if (i == 'SmartIDCard') {
-      html = smart_id_card_item_html;
-    }
+const reset_items = () => {
+  $('#current_authentication_factor_list').text('');
+  $('#current_authentication_factor_list_2').text('');
+  $('#available_authentication_factor_list').text('');
 
+  for (let i in authentication_factors) {
     if (authentication_factors[i] == '0') {
-      $('#available_authentication_factor_list').prepend(html);
+      $('#available_authentication_factor_list').prepend(item_htmls[i]);
     }
     else if (authentication_factors[i] == '1') {
-      $('#current_authentication_factor_list').prepend(html);
-      $('#current_authentication_factor_list_2').prepend(html);
+      $('#current_authentication_factor_list').prepend(item_htmls[i]);
+      $('#current_authentication_factor_list_2').prepend(item_htmls[i]);
     }
   }
 }
 
-set_items();
+reset_items();
 
-let element = document.getElementById('current_authentication_factor_list_2');
-new Sortable(element, {
+new Sortable(document.getElementById('current_authentication_factor_list_2'), {
   animation: 200,
-  group: 'group',
-  onAdd: function(event) {
-    let item = event.item;
+  group: 'authentication_factor_list',
+  onAdd: (event) => {
+    const item = event.item;
+
     if (item.getAttribute('value') == 'GoogleOTP') {
       const execFileSync = require('child_process').execFileSync;
+
       $('#google_otp_key_setting_segment').text(execFileSync('google_otp_key_generator.exe'));
 
       $('#google_otp_key_setting_modal').modal('setting', 'closable', false).modal('show');
     }
     else {
       authentication_factors[item.getAttribute('value')] = '1';
+
+      reset_items();
 
       addon.set_authentication_factor_registry_value(authentication_factors_enumeration[item.getAttribute('value')], 1);
     }
@@ -45,11 +41,14 @@ new Sortable(element, {
       addon.set_authentication_factor_registry_value(authentication_factors_enumeration['HardwareAuth'], 1);
     }
   },
-  onRemove: function(event) {
-    let item = event.item;
-    addon.set_authentication_factor_registry_value(authentication_factors_enumeration[item.getAttribute('value')], 0);
+  onRemove: (event) => {
+    const item = event.item;
 
     authentication_factors[item.getAttribute('value')] = '0';
+
+    reset_items();
+
+    addon.set_authentication_factor_registry_value(authentication_factors_enumeration[item.getAttribute('value')], 0);
 
     if (addon.get_authentication_factor_registry_value(authentication_factors_enumeration['Donglein']) == '0' && addon.get_authentication_factor_registry_value(authentication_factors_enumeration['SmartIDCard']) == '0') {
       addon.set_authentication_factor_registry_value(authentication_factors_enumeration['HardwareAuth'], 0);
@@ -57,8 +56,7 @@ new Sortable(element, {
   }
 });
 
-let element_2 = document.getElementById('available_authentication_factor_list');
-new Sortable(element_2, {
+new Sortable(document.getElementById('available_authentication_factor_list'), {
   animation: 200,
-  group: 'group'
+  group: 'authentication_factor_list'
 });

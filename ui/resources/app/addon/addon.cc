@@ -80,6 +80,28 @@ void get_authentication_factor_registry_value(const FunctionCallbackInfo<Value>&
   arguments.GetReturnValue().Set(String::NewFromUtf8(isolate, result));
 }
 
+void set_authentication_factor_registry_value(const FunctionCallbackInfo<Value>& arguments) {
+  int i = (int)arguments[0]->NumberValue();
+  int j = (int)arguments[1]->NumberValue();
+
+  HKEY phkResult;
+  RegOpenKeyExW(HKEY_LOCAL_MACHINE, L"SOFTWARE\\SmartAuth\\", REG_OPTION_OPEN_LINK, KEY_ALL_ACCESS, &phkResult);
+
+  LPCWSTR valueName[] = {L"Donglein", L"GoogleOTP", L"SmartIDCard", L"HardwareAuth"};
+
+  LPCWSTR data;
+  if (j == 0) {
+    data = L"0";
+  }
+  else if (j == 1) {
+    data = L"1";
+  }
+
+  RegSetValueExW(phkResult, valueName[i], 0, REG_SZ, (const BYTE *)data, (DWORD)(wcslen(data) * sizeof WCHAR));
+
+  RegCloseKey(phkResult);
+}
+
 void get_setting_registry_value(const FunctionCallbackInfo<Value>& arguments) {
   Isolate* isolate = arguments.GetIsolate();
 
@@ -108,28 +130,6 @@ void get_setting_registry_value(const FunctionCallbackInfo<Value>& arguments) {
   arguments.GetReturnValue().Set(String::NewFromUtf8(isolate, result));
 }
 
-void set_authentication_factor_registry_value(const FunctionCallbackInfo<Value>& arguments) {
-  int i = (int)arguments[0]->NumberValue();
-  int j = (int)arguments[1]->NumberValue();
-
-  HKEY phkResult;
-  RegOpenKeyExW(HKEY_LOCAL_MACHINE, L"SOFTWARE\\SmartAuth\\", REG_OPTION_OPEN_LINK, KEY_ALL_ACCESS, &phkResult);
-
-  LPCWSTR valueName[] = {L"Donglein", L"GoogleOTP", L"SmartIDCard", L"HardwareAuth"};
-
-  LPCWSTR data;
-  if (j == 0) {
-    data = L"0";
-  }
-  else if (j == 1) {
-    data = L"1";
-  }
-
-  RegSetValueExW(phkResult, valueName[i], 0, REG_SZ, (const BYTE *)data, (DWORD)(wcslen(data) * sizeof WCHAR));
-
-  RegCloseKey(phkResult);
-}
-
 void set_setting_registry_value(const FunctionCallbackInfo<Value>& arguments) {
   int i = (int)arguments[0]->NumberValue();
   int j = (int)arguments[1]->NumberValue();
@@ -147,6 +147,20 @@ void set_setting_registry_value(const FunctionCallbackInfo<Value>& arguments) {
     data = L"1";
   }
   RegSetValueExW(phkResult, valueName[i], 0, REG_SZ, (const BYTE *)data, (DWORD)(wcslen(data) * sizeof WCHAR));
+
+  RegCloseKey(phkResult);
+}
+
+void set_google_otp_key_registry_value(const FunctionCallbackInfo<Value>& arguments) {
+  String::Utf8Value t(arguments[0]->ToString());
+
+  HKEY phkResult;
+  RegOpenKeyExW(HKEY_LOCAL_MACHINE, L"SOFTWARE\\SmartAuth\\", REG_OPTION_OPEN_LINK, KEY_ALL_ACCESS, &phkResult);
+
+  wchar_t data[256] = {0};
+  mbstowcs(data, (const char *)*t, strlen(*t));
+
+  RegSetValueExW(phkResult, L"GoogleOTPKey", 0, REG_SZ, (const BYTE *)data, (DWORD)(wcslen(data) * sizeof WCHAR));
 
   RegCloseKey(phkResult);
 }
@@ -204,7 +218,7 @@ void set_excluded_credential_provider_registry_value(const FunctionCallbackInfo<
 	RegCloseKey(phkResult);
 }
 
-void set_prohibit_fallback_credential_provider_registry_value(const FunctionCallbackInfo<Value>& arguments) {
+void set_fallback_credential_provider_registry_value(const FunctionCallbackInfo<Value>& arguments) {
   int i = (int)arguments[0]->NumberValue();
 
   HKEY phkResult;
@@ -215,32 +229,25 @@ void set_prohibit_fallback_credential_provider_registry_value(const FunctionCall
 	RegCloseKey(phkResult);
 }
 
-void set_google_otp_key_registry_value(const FunctionCallbackInfo<Value>& arguments) {
-  String::Utf8Value t(arguments[0]->ToString());
-
-  HKEY phkResult;
-  RegOpenKeyExW(HKEY_LOCAL_MACHINE, L"SOFTWARE\\SmartAuth\\", REG_OPTION_OPEN_LINK, KEY_ALL_ACCESS, &phkResult);
-
-  wchar_t data[256] = {0};
-  mbstowcs(data, (const char *)*t, strlen(*t));
-
-  RegSetValueExW(phkResult, L"GoogleOTPKey", 0, REG_SZ, (const BYTE *)data, (DWORD)(wcslen(data) * sizeof WCHAR));
-
-  RegCloseKey(phkResult);
-}
-
 void initialize(Local<Object> exports) {
   NODE_SET_METHOD(exports, "create_registry_keys", create_registry_keys);
+
   NODE_SET_METHOD(exports, "set_initial_registry_values", set_initial_registry_values);
+
   NODE_SET_METHOD(exports, "get_authentication_factor_registry_value", get_authentication_factor_registry_value);
-  NODE_SET_METHOD(exports, "get_setting_registry_value", get_setting_registry_value);
   NODE_SET_METHOD(exports, "set_authentication_factor_registry_value", set_authentication_factor_registry_value);
+
+  NODE_SET_METHOD(exports, "get_setting_registry_value", get_setting_registry_value);
   NODE_SET_METHOD(exports, "set_setting_registry_value", set_setting_registry_value);
+
+  NODE_SET_METHOD(exports, "set_google_otp_key_registry_value", set_google_otp_key_registry_value);
+
   NODE_SET_METHOD(exports, "set_credential_provider_registry_keys_and_values", set_credential_provider_registry_keys_and_values);
   NODE_SET_METHOD(exports, "delete_credential_provider_registry_keys", delete_credential_provider_registry_keys);
+
   NODE_SET_METHOD(exports, "set_excluded_credential_provider_registry_value", set_excluded_credential_provider_registry_value);
-  NODE_SET_METHOD(exports, "set_prohibit_fallback_credential_provider_registry_value", set_prohibit_fallback_credential_provider_registry_value);
-  NODE_SET_METHOD(exports, "set_google_otp_key_registry_value", set_google_otp_key_registry_value);
+
+  NODE_SET_METHOD(exports, "set_fallback_credential_provider_registry_value", set_fallback_credential_provider_registry_value);
 }
 
 NODE_MODULE(addon, initialize)

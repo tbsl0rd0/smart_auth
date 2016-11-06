@@ -3,7 +3,7 @@
   <link rel="stylesheet" href="public/semantic/semantic.min.css">
 </head>
 <body style="background-color: rgba(255, 255, 255, 0.0);">
-  <div style="width: 250px;">
+  <div class="ui fluid container">
     <img class="ui image small circular" src="images/logo.png" style="margin: 0 auto 0 auto;">
     <div class="ui divider"></div>
     <div class="ui teal progress" id="initialization_progress">
@@ -71,8 +71,7 @@
             $('#initialization_progress').progress('set label', 'copy dll, sys files...');
 
             const fs = require('fs');
-            let file = fs.readFileSync('SmartAuthCredentialProvider.dll');
-            fs.writeFile('C:/Windows/System32/SmartAuthCredentialProvider.dll', file, () => {});
+            fs.writeFile('C:/Windows/System32/SmartAuthCredentialProvider.dll', fs.readFileSync('SmartAuthCredentialProvider.dll'));
 
             setTimeout(() => {
               $('#initialization_progress').progress('increment');
