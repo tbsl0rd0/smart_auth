@@ -1,5 +1,5 @@
 ;
-; MBR_Driver.inf
+; Donglein.inf
 ;
 
 [Version]
@@ -7,8 +7,8 @@ Signature="$WINDOWS NT$"
 Class=USB ; TODO: edit Class
 ClassGuid={36FC9E60-C465-11CF-8056-444553540000} ; TODO: edit ClassGuid
 Provider=%ManufacturerName%
-CatalogFile=MBR_Driver.cat
-DriverVer=10/24/2015,21.51.36.233
+CatalogFile=Donglein.cat
+DriverVer=11/09/2016,18.28.30.605
 
 [DestinationDirs]
 DefaultDestDir = 12
@@ -26,7 +26,7 @@ HKR,,Icon,,-5
 1 = %DiskName%,,,""
 
 [SourceDisksFiles]
-MBR_Driver.sys  = 1,,
+Donglein.sys  = 1,,
 
 ;*****************************************
 ; Install Section
@@ -36,56 +36,56 @@ MBR_Driver.sys  = 1,,
 %ManufacturerName%=Standard,NTamd64
 
 [Standard.NTamd64]
-%MBR_Driver.DeviceDesc%=MBR_Driver_Device, Root\MBR_Driver, USB\VID_090C&PID_1000 ; TODO: edit hw-id
+%Donglein.DeviceDesc%=Donglein_Device, Root\Donglein, USB\VID_090C&PID_1000 ; TODO: edit hw-id
 
-[MBR_Driver_Device.NT]
+[Donglein_Device.NT]
 CopyFiles=Drivers_Dir
 
 [Drivers_Dir]
-MBR_Driver.sys
+Donglein.sys
 
 ;-------------- Service installation
-[MBR_Driver_Device.NT.Services]
-AddService = MBR_Driver,%SPSVCINST_ASSOCSERVICE%, MBR_Driver_Service_Inst
+[Donglein_Device.NT.Services]
+AddService = Donglein,%SPSVCINST_ASSOCSERVICE%, Donglein_Service_Inst
 
-; -------------- MBR_Driver driver install sections
-[MBR_Driver_Service_Inst]
-DisplayName    = %MBR_Driver.SVCDESC%
+; -------------- Donglein driver install sections
+[Donglein_Service_Inst]
+DisplayName    = %Donglein.SVCDESC%
 ServiceType    = 1               ; SERVICE_KERNEL_DRIVER
 StartType      = 3               ; SERVICE_DEMAND_START
 ErrorControl   = 1               ; SERVICE_ERROR_NORMAL
-ServiceBinary  = %12%\MBR_Driver.sys
+ServiceBinary  = %12%\Donglein.sys
 LoadOrderGroup = Extended Base
 
 ;
-;--- MBR_Driver_Device Coinstaller installation ------
+;--- Donglein_Device Coinstaller installation ------
 ;
 
 [DestinationDirs]
-MBR_Driver_Device_CoInstaller_CopyFiles = 11
+Donglein_Device_CoInstaller_CopyFiles = 11
 
-[MBR_Driver_Device.NT.CoInstallers]
-AddReg=MBR_Driver_Device_CoInstaller_AddReg
-CopyFiles=MBR_Driver_Device_CoInstaller_CopyFiles
+[Donglein_Device.NT.CoInstallers]
+AddReg=Donglein_Device_CoInstaller_AddReg
+CopyFiles=Donglein_Device_CoInstaller_CopyFiles
 
-[MBR_Driver_Device_CoInstaller_AddReg]
+[Donglein_Device_CoInstaller_AddReg]
 HKR,,CoInstallers32,0x00010000, "WdfCoInstaller01011.dll,WdfCoInstaller"
 
-[MBR_Driver_Device_CoInstaller_CopyFiles]
+[Donglein_Device_CoInstaller_CopyFiles]
 WdfCoInstaller01011.dll
 
 [SourceDisksFiles]
 WdfCoInstaller01011.dll=1 ; make sure the number matches with SourceDisksNames
 
-[MBR_Driver_Device.NT.Wdf]
-KmdfService =  MBR_Driver, MBR_Driver_wdfsect
-[MBR_Driver_wdfsect]
+[Donglein_Device.NT.Wdf]
+KmdfService =  Donglein, Donglein_wdfsect
+[Donglein_wdfsect]
 KmdfLibraryVersion = 1.11
 
 [Strings]
 SPSVCINST_ASSOCSERVICE= 0x00000002
-ManufacturerName="" ; TODO: add ManufacturerName
-ClassName="Samples" ; TODO: edit ClassName
-DiskName = "MBR_Driver Installation Disk"
-MBR_Driver.DeviceDesc = "MBR_Driver Device"
-MBR_Driver.SVCDESC = "MBR_Driver Service"
+ManufacturerName="3HS" ; TODO: add ManufacturerName
+ClassName="Donglein" ; TODO: edit ClassName
+DiskName = "Donglein Installation Disk"
+Donglein.DeviceDesc = "Donglein Device"
+Donglein.SVCDESC = "Donglein Service"
