@@ -51,13 +51,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{DA09FBE1-98ED-4E95-8BAB-519BDF63E971}</ProjectGuid>
+    <ProjectGuid>{163BF0FE-A247-40B6-BDAB-7D047DABDC47}</ProjectGuid>
     <TemplateGuid>{1bc93793-694f-48fe-9372-81e2b05556fd}</TemplateGuid>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
     <Configuration>Win8.1 Debug</Configuration>
     <Platform Condition="'$(Platform)' == ''">Win32</Platform>
-    <RootNamespace>Donglein</RootNamespace>
+    <RootNamespace>donglein_driver</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Win8.1 Debug|Win32'" Label="Configuration">
@@ -273,17 +273,17 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Inf Include="Donglein.inf" />
+    <Inf Include="donglein_driver.inf" />
   </ItemGroup>
   <ItemGroup>
     <FilesToPackage Include="$(TargetPath)" />
     <FilesToPackage Include="@(Inf->'%(CopyOutput)')" Condition="'@(Inf)'!=''" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MainEntry.h" />
+    <ClCompile Include="main_entry.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="MainEntry.c" />
+    <ClInclude Include="main_entry.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

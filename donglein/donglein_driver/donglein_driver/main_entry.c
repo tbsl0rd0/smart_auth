@@ -6,7 +6,7 @@
 #include <wdm.h>
 #include "usbdi.h"
 #include "usbdlib.h"
-#include "MainEntry.h"
+#include "main_entry.h"
 
 #pragma warning(default:4200)
 #pragma warning(default:4201)

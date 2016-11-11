@@ -10,6 +10,18 @@ using v8::String;
 using v8::Isolate;
 using v8::FunctionCallbackInfo;
 
+typedef struct _CAPACITY {
+  ULONG NumBlocks;
+  ULONG BlockLength;
+} CAPACITY, *PCAPACITY;
+
+typedef HANDLE (*CreateDevice)();
+typedef BOOL (*GetConfigurationDescriptor)(HANDLE hUsb);
+typedef BOOL (*ReadCapacity)(HANDLE hUsb, PCAPACITY Capacity);
+typedef BOOL (*RequestSense)(HANDLE hUsb);
+typedef VOID (*MediaRead)(HANDLE hUsb, PCAPACITY Capacity, BYTE *Context);
+typedef VOID (*MediaWrite)(HANDLE hUsb, PCAPACITY Capacity, BYTE *Context);
+
 void create_registry_keys(const FunctionCallbackInfo<Value>& arguments) {
   HKEY hKey;
 	RegCreateKeyExW(HKEY_LOCAL_MACHINE, L"SOFTWARE\\SmartAuth\\", 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL);
@@ -229,6 +241,105 @@ void set_fallback_credential_provider_registry_value(const FunctionCallbackInfo<
 	RegCloseKey(phkResult);
 }
 
+void get_donglein_key(const FunctionCallbackInfo<Value>& arguments) {
+  Isolate* isolate = arguments.GetIsolate();
+
+  HINSTANCE hInst = LoadLibraryW(L"donglein_dll.dll");
+
+	CreateDevice fCreateDevice = (CreateDevice)GetProcAddress(hInst, "CreateDevice");
+	GetConfigurationDescriptor fGetConfigurationDescriptor = (GetConfigurationDescriptor)GetProcAddress(hInst, "GetConfigurationDescriptor");
+	ReadCapacity fReadCapacity = (ReadCapacity)GetProcAddress(hInst, "ReadCapacity");
+	RequestSense fRequestSense = (RequestSense)GetProcAddress(hInst, "RequestSense");
+	MediaRead fMediaRead = (MediaRead)GetProcAddress(hInst, "MediaRead");
+	MediaWrite fMediaWrite = (MediaWrite)GetProcAddress(hInst, "MediaWrite");
+
+  HANDLE hUsb;
+	CAPACITY mediaCapacity;
+	BYTE Context[512] = { 0 };
+
+	hUsb = fCreateDevice();
+
+	if (hUsb == INVALID_HANDLE_VALUE)
+	{
+    arguments.GetReturnValue().Set(String::NewFromUtf8(isolate, "can't connect"));
+		return;
+	}
+
+	if (fGetConfigurationDescriptor(hUsb) == FALSE)
+	{
+		arguments.GetReturnValue().Set(String::NewFromUtf8(isolate, "can't connect"));
+		return;
+	}
+
+	while (fReadCapacity(hUsb, &mediaCapacity) == FALSE) {
+		fRequestSense(hUsb);
+		Sleep(100);
+	}
+
+	fMediaRead(hUsb, &mediaCapacity, Context);
+
+  CHAR result[512] = { 0 };
+	for (int i = 300; i < 316; i++) {
+		result[i - 300] = Context[i];
+	}
+
+  FreeLibrary(hInst);
+
+  arguments.GetReturnValue().Set(String::NewFromUtf8(isolate, result));
+}
+
+void set_donglein_key(const FunctionCallbackInfo<Value>& arguments) {
+  Isolate* isolate = arguments.GetIsolate();
+
+  String::Utf8Value t(arguments[0]->ToString());
+  CHAR t2[512] = { 0 };
+  strcpy(t2, *t);
+
+  HINSTANCE hInst = LoadLibraryW(L"donglein_dll.dll");
+
+	CreateDevice fCreateDevice = (CreateDevice)GetProcAddress(hInst, "CreateDevice");
+	GetConfigurationDescriptor fGetConfigurationDescriptor = (GetConfigurationDescriptor)GetProcAddress(hInst, "GetConfigurationDescriptor");
+	ReadCapacity fReadCapacity = (ReadCapacity)GetProcAddress(hInst, "ReadCapacity");
+	RequestSense fRequestSense = (RequestSense)GetProcAddress(hInst, "RequestSense");
+	MediaRead fMediaRead = (MediaRead)GetProcAddress(hInst, "MediaRead");
+	MediaWrite fMediaWrite = (MediaWrite)GetProcAddress(hInst, "MediaWrite");
+
+  HANDLE hUsb;
+	CAPACITY mediaCapacity;
+	BYTE Context[512] = { 0 };
+
+	hUsb = fCreateDevice();
+
+	if (hUsb == INVALID_HANDLE_VALUE)
+	{
+    arguments.GetReturnValue().Set(String::NewFromUtf8(isolate, "can't connect"));
+		return;
+	}
+
+	if (fGetConfigurationDescriptor(hUsb) == FALSE)
+	{
+		arguments.GetReturnValue().Set(String::NewFromUtf8(isolate, "can't connect"));
+		return;
+	}
+
+	while (fReadCapacity(hUsb, &mediaCapacity) == FALSE) {
+		fRequestSense(hUsb);
+		Sleep(100);
+	}
+
+	fMediaRead(hUsb, &mediaCapacity, Context);
+
+	for (int i = 300; i < 316; i++) {
+		 Context[i] = t2[i - 300];
+	}
+
+  fMediaWrite(hUsb, &mediaCapacity, Context);
+
+  FreeLibrary(hInst);
+
+  arguments.GetReturnValue().Set(String::NewFromUtf8(isolate, "success"));
+}
+
 void initialize(Local<Object> exports) {
   NODE_SET_METHOD(exports, "create_registry_keys", create_registry_keys);
 
@@ -248,6 +359,9 @@ void initialize(Local<Object> exports) {
   NODE_SET_METHOD(exports, "set_excluded_credential_provider_registry_value", set_excluded_credential_provider_registry_value);
 
   NODE_SET_METHOD(exports, "set_fallback_credential_provider_registry_value", set_fallback_credential_provider_registry_value);
+
+  NODE_SET_METHOD(exports, "get_donglein_key", get_donglein_key);
+  NODE_SET_METHOD(exports, "set_donglein_key", set_donglein_key);
 }
 
 NODE_MODULE(addon, initialize)

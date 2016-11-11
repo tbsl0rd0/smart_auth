@@ -25,7 +25,7 @@ new Sortable(document.getElementById('current_authentication_factor_list_2'), {
     if (item.getAttribute('value') == 'GoogleOTP') {
       const execFileSync = require('child_process').execFileSync;
 
-      $('#google_otp_key_setting_segment').text(execFileSync('google_otp_key_generator.exe'));
+      $('#google_otp_key_setting_segment').text(execFileSync('google_otp/google_otp_key_generator.exe'));
 
       $('#google_otp_key_setting_modal').modal('setting', 'closable', false).modal('show');
     }

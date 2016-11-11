@@ -1,5 +1,5 @@
 ;
-; Donglein.inf
+; donglein_driver.inf
 ;
 
 [Version]
@@ -7,7 +7,7 @@ Signature="$WINDOWS NT$"
 Class=USB ; TODO: edit Class
 ClassGuid={36FC9E60-C465-11CF-8056-444553540000} ; TODO: edit ClassGuid
 Provider=%ManufacturerName%
-CatalogFile=Donglein.cat
+CatalogFile=donglein_driver.cat
 DriverVer= ; TODO: set DriverVer in stampinf property pages
 
 [DestinationDirs]
@@ -26,7 +26,7 @@ HKR,,Icon,,-5
 1 = %DiskName%,,,""
 
 [SourceDisksFiles]
-Donglein.sys  = 1,,
+donglein_driver.sys  = 1,,
 
 ;*****************************************
 ; Install Section
@@ -36,56 +36,56 @@ Donglein.sys  = 1,,
 %ManufacturerName%=Standard,NT$ARCH$
 
 [Standard.NT$ARCH$]
-%Donglein.DeviceDesc%=Donglein_Device, Root\Donglein, USB\VID_090C&PID_1000 ; TODO: edit hw-id
+%donglein_driver.DeviceDesc%=donglein_driver_Device, Root\donglein_driver, USB\VID_090C&PID_1000 ; TODO: edit hw-id
 
-[Donglein_Device.NT]
+[donglein_driver_Device.NT]
 CopyFiles=Drivers_Dir
 
 [Drivers_Dir]
-Donglein.sys
+donglein_driver.sys
 
 ;-------------- Service installation
-[Donglein_Device.NT.Services]
-AddService = Donglein,%SPSVCINST_ASSOCSERVICE%, Donglein_Service_Inst
+[donglein_driver_Device.NT.Services]
+AddService = donglein_driver,%SPSVCINST_ASSOCSERVICE%, donglein_driver_Service_Inst
 
-; -------------- Donglein driver install sections
-[Donglein_Service_Inst]
-DisplayName    = %Donglein.SVCDESC%
+; -------------- donglein_driver driver install sections
+[donglein_driver_Service_Inst]
+DisplayName    = %donglein_driver.SVCDESC%
 ServiceType    = 1               ; SERVICE_KERNEL_DRIVER
 StartType      = 3               ; SERVICE_DEMAND_START
 ErrorControl   = 1               ; SERVICE_ERROR_NORMAL
-ServiceBinary  = %12%\Donglein.sys
+ServiceBinary  = %12%\donglein_driver.sys
 LoadOrderGroup = Extended Base
 
 ;
-;--- Donglein_Device Coinstaller installation ------
+;--- donglein_driver_Device Coinstaller installation ------
 ;
 
 [DestinationDirs]
-Donglein_Device_CoInstaller_CopyFiles = 11
+donglein_driver_Device_CoInstaller_CopyFiles = 11
 
-[Donglein_Device.NT.CoInstallers]
-AddReg=Donglein_Device_CoInstaller_AddReg
-CopyFiles=Donglein_Device_CoInstaller_CopyFiles
+[donglein_driver_Device.NT.CoInstallers]
+AddReg=donglein_driver_Device_CoInstaller_AddReg
+CopyFiles=donglein_driver_Device_CoInstaller_CopyFiles
 
-[Donglein_Device_CoInstaller_AddReg]
+[donglein_driver_Device_CoInstaller_AddReg]
 HKR,,CoInstallers32,0x00010000, "WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll,WdfCoInstaller"
 
-[Donglein_Device_CoInstaller_CopyFiles]
+[donglein_driver_Device_CoInstaller_CopyFiles]
 WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll
 
 [SourceDisksFiles]
 WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll=1 ; make sure the number matches with SourceDisksNames
 
-[Donglein_Device.NT.Wdf]
-KmdfService =  Donglein, Donglein_wdfsect
-[Donglein_wdfsect]
+[donglein_driver_Device.NT.Wdf]
+KmdfService =  donglein_driver, donglein_driver_wdfsect
+[donglein_driver_wdfsect]
 KmdfLibraryVersion = $KMDFVERSION$
 
 [Strings]
 SPSVCINST_ASSOCSERVICE= 0x00000002
 ManufacturerName="3HS" ; TODO: add ManufacturerName
-ClassName="Donglein" ; TODO: edit ClassName
-DiskName = "Donglein Installation Disk"
-Donglein.DeviceDesc = "Donglein Device"
-Donglein.SVCDESC = "Donglein Service"
+ClassName="donglein" ; TODO: edit ClassName
+DiskName = "donglein_driver Installation Disk"
+donglein_driver.DeviceDesc = "donglein device"
+donglein_driver.SVCDESC = "donglein service"

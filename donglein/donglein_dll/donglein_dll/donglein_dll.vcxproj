@@ -19,9 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{D7EC8A95-16D3-4861-B2BB-2C0D78FFCF7F}</ProjectGuid>
+    <ProjectGuid>{5E1FAD34-E347-4B00-8BB2-51166DDC7A95}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>SmartAuthCredentialProvider</RootNamespace>
+    <RootNamespace>donglein_dll</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -42,12 +42,14 @@
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
-    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -71,7 +73,7 @@
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LinkIncremental>false</LinkIncremental>
+    <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -85,7 +87,8 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;SMARTAUTHCREDENTIALPROVIDER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;DONGLEIN_DLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -94,25 +97,16 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <WarningLevel>Level4</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Program Files\Microsoft SDKs\Windows\v1.0\Include</AdditionalIncludeDirectories>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <MinimalRebuild>false</MinimalRebuild>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;DONGLEIN_DLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <OutputFile>$(ProjectDir)..\Dll\$(TargetName)(debug)$(TargetExt)</OutputFile>
-      <AdditionalLibraryDirectories>C:\program Files\microsoft sdKs\Windows\v1.0\Lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <ShowProgress>LinkVerboseLib</ShowProgress>
-      <AdditionalDependencies>secur32.lib;shlwapi.lib;gdi32.lib;ole32.lib;user32.lib;advapi32.lib;credui.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ModuleDefinitionFile>SmartAuthCredentialProvider.def</ModuleDefinitionFile>
-      <AddModuleNamesToAssembly>secur32.lib;%(AddModuleNamesToAssembly)</AddModuleNamesToAssembly>
-      <AssemblyDebug>true</AssemblyDebug>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -123,7 +117,8 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;SMARTAUTHCREDENTIALPROVIDER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;DONGLEIN_DLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -134,68 +129,28 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <WarningLevel>Level4</WarningLevel>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
-      <IntrinsicFunctions>false</IntrinsicFunctions>
-      <PreprocessorDefinitions>_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>NDEBUG;_WINDOWS;_USRDLL;DONGLEIN_DLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>C:\Program Files\Microsoft SDKs\Windows\v1.0\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <OutputFile>$(ProjectDir)..\Dll\$(TargetName)$(TargetExt)</OutputFile>
-      <AdditionalLibraryDirectories>C:\program Files\microsoft sdKs\Windows\v1.0\Lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>secur32.lib;shlwapi.lib;gdi32.lib;ole32.lib;user32.lib;advapi32.lib;credui.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ModuleDefinitionFile>smartauthcredentialprovider.def</ModuleDefinitionFile>
-      <AddModuleNamesToAssembly>secur32.lib;%(AddModuleNamesToAssembly)</AddModuleNamesToAssembly>
-      <ShowProgress>LinkVerboseLib</ShowProgress>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Auth.h" />
-    <ClInclude Include="base32.h" />
-    <ClInclude Include="CommandWindow.h" />
-    <ClInclude Include="common.h" />
-    <ClInclude Include="Dll.h" />
-    <ClInclude Include="guid.h" />
-    <ClInclude Include="helpers.h" />
-    <ClInclude Include="HMAC_SHA1.h" />
-    <ClInclude Include="mbr.h" />
-    <ClInclude Include="MessageCredential.h" />
-    <ClInclude Include="OtpCheck.h" />
-    <ClInclude Include="RegCheck.h" />
-    <ClInclude Include="resource.h" />
-    <ClInclude Include="SHA1.h" />
-    <ClInclude Include="SmartAuthCredential.h" />
-    <ClInclude Include="SmartAuthProvider.h" />
-    <ClInclude Include="SerialClass.h" />
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Auth.cpp" />
-    <ClCompile Include="base32.cpp" />
-    <ClCompile Include="CommandWindow.cpp" />
-    <ClCompile Include="Dll.cpp" />
-    <ClCompile Include="guid.cpp" />
-    <ClCompile Include="helpers.cpp" />
-    <ClCompile Include="HMAC_SHA1.cpp" />
-    <ClCompile Include="mbr.c" />
-    <ClCompile Include="MessageCredential.cpp" />
-    <ClCompile Include="OtpCheck.cpp" />
-    <ClCompile Include="RegCheck.cpp" />
-    <ClCompile Include="SHA1.cpp" />
-    <ClCompile Include="SmartAuthCredential.cpp" />
-    <ClCompile Include="SmartAuthProvider.cpp" />
-    <ClCompile Include="Serial.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="resources.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="tileimage.bmp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="SmartAuthCredentialProvider.def" />
+    <ClInclude Include="main.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
