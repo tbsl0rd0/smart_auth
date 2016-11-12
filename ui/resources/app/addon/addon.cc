@@ -288,6 +288,8 @@ void set_donglein_key(const FunctionCallbackInfo<Value>& arguments) {
 
   fMediaWrite(hUsb, &mediaCapacity, Context);
 
+  CloseHandle(hUsb);
+
   FreeLibrary(hInst);
 
   arguments.GetReturnValue().Set(String::NewFromUtf8(isolate, "success"));

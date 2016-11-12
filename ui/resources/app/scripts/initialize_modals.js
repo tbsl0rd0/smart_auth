@@ -30,7 +30,6 @@ $('#donglein_key_setting_next').on('click', () => {
   $('#donglein_key_setting_step_2').addClass('active');
 
   setTimeout(() => {
-    // 통신하는 코드
     let t = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
     for(let i = 0; i < 16; i++) {
@@ -94,7 +93,7 @@ $('.donglein_key_setting_cancel').on('click', () => {
 
   reset_items();
 
-  fs.writeFileSync('C:/Windows/inf/donglein_driver.inf', fs.readFileSync('donglein/donglein_driver.inf'));
+  fs.writeFileSync('C:/Windows/inf/donglein_driver.inf', '');
   fs.unlinkSync('C:/Windows/inf/donglein_driver.inf');
   fs.writeFileSync('C:/Windows/inf/usbstor.inf', fs.readFileSync('donglein/usbstor.inf'));
 });

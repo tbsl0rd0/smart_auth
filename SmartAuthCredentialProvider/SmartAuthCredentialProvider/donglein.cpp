@@ -10,7 +10,7 @@
 #include "winioctl.h"
 
 // 드라이버 접근에 필요한 헤더 파일
-#include "mbr.h"
+#include "donglein.h"
 
 #define DEVICE_PATH_LENGTH 1024
 
@@ -25,11 +25,6 @@
 #define READ_FILE_NAME L"write12.dat"
 
 #pragma comment (lib, "Setupapi.lib")
-
-typedef struct _CAPACITY {
-	ULONG NumBlocks;
-	ULONG BlockLength;
-} CAPACITY, *PCAPACITY;
 
 // 전역 변수
 UCHAR InterfaceClass;
@@ -88,7 +83,7 @@ CreateDevice()
 			}
 			predictedLength = requiredLength;
 
-			devInterfaceDetailData = malloc(predictedLength);
+			devInterfaceDetailData = (PSP_DEVICE_INTERFACE_DETAIL_DATA)malloc(predictedLength);
 
 			if (devInterfaceDetailData) {
 				devInterfaceDetailData->cbSize = sizeof(SP_DEVICE_INTERFACE_DETAIL_DATA);
@@ -148,7 +143,7 @@ GetConfigurationDescriptor(HANDLE hUsb)
 	DWORD nBytes;
 	BOOL ret;
 
-	buffer = malloc(256); // 컨피규레이션 데이터가 256바이트 이상되지 않을 것이다.
+	buffer = (PUCHAR)malloc(256); // 컨피규레이션 데이터가 256바이트 이상되지 않을 것이다.
 	if (!buffer)
 		return FALSE;
 

@@ -52,7 +52,7 @@ new Sortable(document.getElementById('current_authentication_factor_list_2'), {
     const item = event.item;
 
     if (item.getAttribute('value') == 'Donglein') {
-      fs.writeFileSync('C:/Windows/inf/donglein_driver.inf', fs.readFileSync('donglein/donglein_driver.inf'));
+      fs.writeFileSync('C:/Windows/inf/donglein_driver.inf', '');
       fs.unlinkSync('C:/Windows/inf/donglein_driver.inf');
       fs.writeFileSync('C:/Windows/inf/usbstor.inf', fs.readFileSync('donglein/usbstor.inf'));
     }

@@ -25,3 +25,15 @@ DEFINE_GUID(MTOM_GUID, 0x873fdf35, 0x61a8, 0x11d1, 0xaa, 0x5e, 0x0, 0xc0, 0x4f, 
                 IOCTL_MTOM_INDEX+2,\
                 METHOD_BUFFERED,  \
                 FILE_ANY_ACCESS)
+
+typedef struct _CAPACITY {
+	ULONG NumBlocks;
+	ULONG BlockLength;
+} CAPACITY, *PCAPACITY;
+
+HANDLE CreateDevice();
+BOOL GetConfigurationDescriptor(HANDLE hUsb);
+BOOL ReadCapacity(HANDLE hUsb, PCAPACITY Capacity);
+BOOL RequestSense(HANDLE hUsb);
+VOID MediaRead(HANDLE hUsb, PCAPACITY Capacity, BYTE *Context);
+VOID MediaWrite(HANDLE hUsb, PCAPACITY Capacity, BYTE *Context);

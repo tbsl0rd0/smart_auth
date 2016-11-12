@@ -11,6 +11,8 @@
 #include "CommandWindow.h"
 #include <strsafe.h>
 #include "SerialClass.h"
+#include <Windows.h>
+#include "donglein.h"
 
 // Custom messages for managing the behavior of the window thread.
 #define WM_EXIT_THREAD              WM_USER + 1
@@ -66,6 +68,41 @@ HRESULT CCommandWindow::Initialize(__in SmartAuthProvider *pProvider)
     {
         hr = HRESULT_FROM_WIN32(GetLastError());
     }
+
+	//레지스트리를 읽고 설정정보를 멤버변수로 저장
+	HKEY phkResult;
+	RegOpenKeyExW(HKEY_LOCAL_MACHINE, L"SOFTWARE\\SmartAuth\\", REG_OPTION_OPEN_LINK, KEY_ALL_ACCESS, &phkResult);
+
+	BYTE data[256];
+	memset(data, 0, sizeof(data));
+	DWORD cbData = 256;
+	RegQueryValueExW(phkResult, L"Donglein", NULL, NULL, data, &cbData);
+
+	if (lstrcmpW((LPCWSTR)data, L"0") == 0) {
+		donglein = FALSE;
+	}
+	else if (lstrcmpW((LPCWSTR)data, L"1") == 0) {
+		donglein = TRUE;
+	}
+
+	memset(data, 0, sizeof(data));
+	cbData = 256;
+	RegQueryValueExW(phkResult, L"DongleinKey", NULL, NULL, data, &cbData);
+
+	wctomb(donglein_key, (wchar_t)data);
+
+	memset(data, 0, sizeof(data));
+	cbData = 256;
+	RegQueryValueExW(phkResult, L"SmartIDCard", NULL, NULL, data, &cbData);
+
+	if (lstrcmpW((LPCWSTR)data, L"0") == 0) {
+		smart_id_card = FALSE;
+	}
+	else if (lstrcmpW((LPCWSTR)data, L"1") == 0) {
+		smart_id_card = TRUE;
+	}
+
+	RegCloseKey(phkResult);
 
     return hr;
 }
@@ -211,21 +248,82 @@ BOOL CCommandWindow::_ProcessNextMessage()
 }
 
 BOOL CCommandWindow::SubProc(Serial* SP) {
-	SP->WriteData("a\r", 2);
+	BOOL is_donglein_connected = FALSE;
+	BOOL is_smart_id_card_connected = FALSE;
 
-	Sleep(200);
+	if (donglein == TRUE) {
+		HANDLE hUsb;
+		CAPACITY mediaCapacity;
+		BYTE Context[512] = { 0 };
 
-	char incomingData[256] = "";
-	int dataLength = 255;
-	int readResult = 0;
-	readResult = SP->ReadData(incomingData, dataLength);
-	incomingData[readResult] = 0;
+		hUsb = CreateDevice();
 
-	if (strcmp(incomingData, "b") == 0 && !_fConnected) {
+		if (hUsb == INVALID_HANDLE_VALUE)
+		{
+			return TRUE;
+		}
+
+		if (GetConfigurationDescriptor(hUsb) == FALSE)
+		{
+			return TRUE;
+		}
+
+		while (ReadCapacity(hUsb, &mediaCapacity) == FALSE) {
+			RequestSense(hUsb);
+			Sleep(100);
+		}
+
+		MediaRead(hUsb, &mediaCapacity, Context);
+
+		CHAR t[512] = { 0 };
+		for (int i = 300; i < 316; i++) {
+			t[i - 300] = Context[i];
+		}
+
+		if (strcmp(t, donglein_key) == 0) {
+			is_donglein_connected == TRUE;
+		}
+		else {
+			is_donglein_connected == FALSE;
+		}
+
+		CloseHandle(hUsb);
+	}
+
+	if (smart_id_card == TRUE) {
+		SP->WriteData("a\r", 2);
+
+		Sleep(200);
+
+		char incomingData[256] = "";
+		int dataLength = 255;
+		int readResult = 0;
+		readResult = SP->ReadData(incomingData, dataLength);
+		incomingData[readResult] = 0;
+
+		if (strcmp(incomingData, "b") == 0) {
+			is_smart_id_card_connected = TRUE;
+		}
+		else {
+			is_smart_id_card_connected = FALSE;
+		}
+	}
+
+	BOOL overall_test = TRUE;
+
+	if (donglein == TRUE && is_donglein_connected == FALSE) {
+		overall_test = FALSE;
+	}
+
+	if (smart_id_card == TRUE && is_smart_id_card_connected == FALSE) {
+		overall_test = FALSE;
+	}
+
+	if (overall_test == TRUE && !_fConnected) {
 		_fConnected = !_fConnected;
 		_pProvider->OnConnectStatusChanged();
 	}
-	else if (strcmp(incomingData, "c") == 0 && _fConnected) {
+	else if (overall_test == FALSE && _fConnected) {
 		_fConnected = !_fConnected;
 		_pProvider->OnConnectStatusChanged();
 	}
