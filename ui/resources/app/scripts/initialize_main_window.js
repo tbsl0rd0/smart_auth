@@ -1,3 +1,4 @@
+const fs = require('fs');
 const addon = require('./addon');
 const {ipcRenderer} = require('electron');
 

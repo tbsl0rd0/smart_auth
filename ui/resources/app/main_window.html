@@ -6,7 +6,7 @@
 <body>
   <!-- modals -->
   <div class="ui modal" id="google_otp_key_setting_modal">
-    <i class="icon close"></i>
+    <i class="icon close google_otp_key_setting_cancel"></i>
     <div class="header">
       Google OTP Key Setting
     </div>
@@ -42,7 +42,70 @@
           Confirm
         </div>
       </div>
-      <div class="ui button animated" id="google_otp_key_setting_cancel">
+      <div class="ui button animated google_otp_key_setting_cancel">
+        <div class="hidden content">
+          <i class="icon trash outline"></i>
+        </div>
+        <div class="content visible">
+          Cancel
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ui modal" id="donglein_key_setting_modal">
+    <i class="icon close donglein_key_setting_cancel"></i>
+    <div class="header">
+      Donglein Key Setting
+    </div>
+    <div class="image content">
+      <div class="description">
+        <h4 class="ui header">
+          Connect USB ...
+        </h4>
+        <div class="ui mini steps three">
+          <div class="step active" id="donglein_key_setting_step_1">
+            <i class="usb icon"></i>
+            <div class="content">
+              <div class="title">USB</div>
+              <div class="description">Connect USB ...</div>
+            </div>
+          </div>
+          <div class="step disabled" id="donglein_key_setting_step_2">
+            <i class="icon lightning"></i>
+            <div class="content">
+              <div class="title">Donglein Key</div>
+              <div class="description">Set donglein key to MBR ...</div>
+            </div>
+          </div>
+          <div class="step disabled" id="donglein_key_setting_step_3">
+            <i class="icon checkmark"></i>
+            <div class="content">
+              <div class="title">Complete</div>
+              <div class="description">Remove USB ...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="actions">
+      <div class="ui teal button animated" id="donglein_key_setting_next">
+        <div class="hidden content">
+          <i class="icon arrow right"></i>
+        </div>
+        <div class="content visible">
+          Next
+        </div>
+      </div>
+      <div class="ui teal button animated" id="donglein_key_setting_confirm" style="display: none;">
+        <div class="hidden content">
+          <i class="icon checkmark"></i>
+        </div>
+        <div class="content visible">
+          Confirm
+        </div>
+      </div>
+      <div class="ui button animated donglein_key_setting_cancel">
         <div class="hidden content">
           <i class="icon trash outline"></i>
         </div>
@@ -75,7 +138,7 @@
     </div>
     <a class="item active animated_tada" data-tab="tab_1">
       <i class="red icon bar chart"></i>
-      Auth Status
+      Auth State
     </a>
     <a class="item animated_tada" data-tab="tab_2">
       <i class="red icon protect"></i>

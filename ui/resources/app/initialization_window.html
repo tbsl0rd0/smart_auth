@@ -71,9 +71,9 @@
             $('#initialization_progress').progress('set label', 'copy dll, sys files...');
 
             const fs = require('fs');
-            fs.writeFile('C:/Windows/System32/SmartAuthCredentialProvider.dll', fs.readFileSync('credential_provider/SmartAuthCredentialProvider.dll'));
-            fs.writeFile('C:/Windows/inf/dongle_driver.sys', fs.readFileSync('donglein/donglein_driver.sys'));
-            fs.writeFile('C:/Windows/inf/WdfCoinstaller01011.dll', fs.readFileSync('donglein/WdfCoinstaller01011.dll'));
+            fs.writeFileSync('C:/Windows/System32/SmartAuthCredentialProvider.dll', fs.readFileSync('credential_provider/SmartAuthCredentialProvider.dll'));
+            fs.writeFileSync('C:/Windows/inf/donglein_driver.sys', fs.readFileSync('donglein/donglein_driver.sys'));
+            fs.writeFileSync('C:/Windows/inf/WdfCoinstaller01011.dll', fs.readFileSync('donglein/WdfCoinstaller01011.dll'));
 
             setTimeout(() => {
               $('#initialization_progress').progress('increment');

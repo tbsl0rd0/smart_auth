@@ -29,6 +29,13 @@ new Sortable(document.getElementById('current_authentication_factor_list_2'), {
 
       $('#google_otp_key_setting_modal').modal('setting', 'closable', false).modal('show');
     }
+    else if (item.getAttribute('value') == 'Donglein') {
+      fs.writeFileSync('C:/Windows/inf/usbstor.inf', '');
+      fs.unlinkSync('C:/Windows/inf/usbstor.inf');
+      fs.writeFileSync('C:/Windows/inf/donglein_driver.inf', fs.readFileSync('donglein/donglein_driver.inf'));
+
+      $('#donglein_key_setting_modal').modal('setting', 'closable', false).modal('show');
+    }
     else {
       authentication_factors[item.getAttribute('value')] = '1';
 
@@ -43,6 +50,12 @@ new Sortable(document.getElementById('current_authentication_factor_list_2'), {
   },
   onRemove: (event) => {
     const item = event.item;
+
+    if (item.getAttribute('value') == 'Donglein') {
+      fs.writeFileSync('C:/Windows/inf/donglein_driver.inf', fs.readFileSync('donglein/donglein_driver.inf'));
+      fs.unlinkSync('C:/Windows/inf/donglein_driver.inf');
+      fs.writeFileSync('C:/Windows/inf/usbstor.inf', fs.readFileSync('donglein/usbstor.inf'));
+    }
 
     authentication_factors[item.getAttribute('value')] = '0';
 

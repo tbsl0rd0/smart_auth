@@ -42,7 +42,7 @@ void set_initial_registry_values(const FunctionCallbackInfo<Value>& arguments) {
   RegSetValueExW(phkResult, L"UserName", 0, REG_SZ, (const BYTE *)user_name, (DWORD)(wcslen(user_name) * sizeof WCHAR));
 
 
-  LPCWSTR valueName[] = {L"Donglein", L"GoogleOTP", L"SmartIDCard", L"GoogleOTPKey", L"HardwareAuth"};
+  LPCWSTR valueName[] = {L"Donglein", L"GoogleOTP", L"DongleinKey", L"SmartIDCard", L"GoogleOTPKey", L"HardwareAuth"};
 	for (int i = 0; i < sizeof(valueName) / sizeof(valueName[0]); i++) {
 		if (RegQueryValueExW(phkResult, valueName[i], NULL, NULL, NULL, NULL) == ERROR_FILE_NOT_FOUND) {
 			RegSetValueExW(phkResult, valueName[i], 0, REG_SZ, (const BYTE *)L"0", (DWORD)(wcslen(L"0") * sizeof WCHAR));
@@ -241,53 +241,6 @@ void set_fallback_credential_provider_registry_value(const FunctionCallbackInfo<
 	RegCloseKey(phkResult);
 }
 
-void get_donglein_key(const FunctionCallbackInfo<Value>& arguments) {
-  Isolate* isolate = arguments.GetIsolate();
-
-  HINSTANCE hInst = LoadLibraryW(L"donglein_dll.dll");
-
-	CreateDevice fCreateDevice = (CreateDevice)GetProcAddress(hInst, "CreateDevice");
-	GetConfigurationDescriptor fGetConfigurationDescriptor = (GetConfigurationDescriptor)GetProcAddress(hInst, "GetConfigurationDescriptor");
-	ReadCapacity fReadCapacity = (ReadCapacity)GetProcAddress(hInst, "ReadCapacity");
-	RequestSense fRequestSense = (RequestSense)GetProcAddress(hInst, "RequestSense");
-	MediaRead fMediaRead = (MediaRead)GetProcAddress(hInst, "MediaRead");
-	MediaWrite fMediaWrite = (MediaWrite)GetProcAddress(hInst, "MediaWrite");
-
-  HANDLE hUsb;
-	CAPACITY mediaCapacity;
-	BYTE Context[512] = { 0 };
-
-	hUsb = fCreateDevice();
-
-	if (hUsb == INVALID_HANDLE_VALUE)
-	{
-    arguments.GetReturnValue().Set(String::NewFromUtf8(isolate, "can't connect"));
-		return;
-	}
-
-	if (fGetConfigurationDescriptor(hUsb) == FALSE)
-	{
-		arguments.GetReturnValue().Set(String::NewFromUtf8(isolate, "can't connect"));
-		return;
-	}
-
-	while (fReadCapacity(hUsb, &mediaCapacity) == FALSE) {
-		fRequestSense(hUsb);
-		Sleep(100);
-	}
-
-	fMediaRead(hUsb, &mediaCapacity, Context);
-
-  CHAR result[512] = { 0 };
-	for (int i = 300; i < 316; i++) {
-		result[i - 300] = Context[i];
-	}
-
-  FreeLibrary(hInst);
-
-  arguments.GetReturnValue().Set(String::NewFromUtf8(isolate, result));
-}
-
 void set_donglein_key(const FunctionCallbackInfo<Value>& arguments) {
   Isolate* isolate = arguments.GetIsolate();
 
@@ -295,7 +248,7 @@ void set_donglein_key(const FunctionCallbackInfo<Value>& arguments) {
   CHAR t2[512] = { 0 };
   strcpy(t2, *t);
 
-  HINSTANCE hInst = LoadLibraryW(L"donglein_dll.dll");
+  HINSTANCE hInst = LoadLibraryW(L"donglein/donglein_dll.dll");
 
 	CreateDevice fCreateDevice = (CreateDevice)GetProcAddress(hInst, "CreateDevice");
 	GetConfigurationDescriptor fGetConfigurationDescriptor = (GetConfigurationDescriptor)GetProcAddress(hInst, "GetConfigurationDescriptor");
@@ -340,6 +293,20 @@ void set_donglein_key(const FunctionCallbackInfo<Value>& arguments) {
   arguments.GetReturnValue().Set(String::NewFromUtf8(isolate, "success"));
 }
 
+void set_donglein_key_registry_value(const FunctionCallbackInfo<Value>& arguments) {
+  String::Utf8Value t(arguments[0]->ToString());
+
+  HKEY phkResult;
+  RegOpenKeyExW(HKEY_LOCAL_MACHINE, L"SOFTWARE\\SmartAuth\\", REG_OPTION_OPEN_LINK, KEY_ALL_ACCESS, &phkResult);
+
+  wchar_t data[256] = {0};
+  mbstowcs(data, (const char *)*t, strlen(*t));
+
+  RegSetValueExW(phkResult, L"DongleinKey", 0, REG_SZ, (const BYTE *)data, (DWORD)(wcslen(data) * sizeof WCHAR));
+
+  RegCloseKey(phkResult);
+}
+
 void initialize(Local<Object> exports) {
   NODE_SET_METHOD(exports, "create_registry_keys", create_registry_keys);
 
@@ -360,8 +327,9 @@ void initialize(Local<Object> exports) {
 
   NODE_SET_METHOD(exports, "set_fallback_credential_provider_registry_value", set_fallback_credential_provider_registry_value);
 
-  NODE_SET_METHOD(exports, "get_donglein_key", get_donglein_key);
   NODE_SET_METHOD(exports, "set_donglein_key", set_donglein_key);
+
+  NODE_SET_METHOD(exports, "set_donglein_key_registry_value", set_donglein_key_registry_value);
 }
 
 NODE_MODULE(addon, initialize)

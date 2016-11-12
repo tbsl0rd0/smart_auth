@@ -57,6 +57,8 @@ app.on('ready', () => {
 
       main_window.loadURL(`file://${__dirname}/main_window.html`);
 
+      // main_window.webContents.openDevTools();
+
       main_window.once('ready-to-show', () => {
         main_window.show();
         initialization_window.close();
