@@ -3,7 +3,7 @@
 
 typedef unsigned char BYTE;
 
-class Base32{
+class Base32 {
 
 public:
 

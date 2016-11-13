@@ -80,7 +80,7 @@ HRESULT CCommandWindow::Initialize(__in SmartAuthProvider *pProvider)
 	if (lstrcmpW((LPCWSTR)data, L"0") == 0) {
 		donglein = FALSE;
 	}
-	else if (lstrcmpW((LPCWSTR)data, L"1") == 0) {
+	else {
 		donglein = TRUE;
 	}
 
@@ -98,7 +98,7 @@ HRESULT CCommandWindow::Initialize(__in SmartAuthProvider *pProvider)
 	if (lstrcmpW((LPCWSTR)data, L"0") == 0) {
 		smart_id_card = FALSE;
 	}
-	else if (lstrcmpW((LPCWSTR)data, L"1") == 0) {
+	else {
 		smart_id_card = TRUE;
 	}
 
@@ -248,9 +248,7 @@ BOOL CCommandWindow::_ProcessNextMessage()
 }
 
 BOOL CCommandWindow::SubProc(Serial* SP) {
-	BOOL is_donglein_connected = FALSE;
-	BOOL is_smart_id_card_connected = FALSE;
-
+	BOOL is_donglein_connected = FALSE;	
 	if (donglein == TRUE) {
 		HANDLE hUsb;
 		CAPACITY mediaCapacity;
@@ -282,28 +280,32 @@ BOOL CCommandWindow::SubProc(Serial* SP) {
 			return TRUE;
 		}
 
-		int count = 0;
+		int c = 0;
 		while (ReadCapacity(hUsb, &mediaCapacity) == FALSE) {
 			RequestSense(hUsb);
+
 			Sleep(100);
-			if (count > 20) {
+
+			if (c > 20) {
 				if (_fConnected) {
 					_fConnected = !_fConnected;
 					_pProvider->OnConnectStatusChanged();
 				}
+
 				return TRUE;
 			}
-			count++;
+
+			c++;
 		}
 
 		MediaRead(hUsb, &mediaCapacity, Context);
 
-		CHAR t[512] = { 0 };
+		CHAR s[512] = { 0 };
 		for (int i = 300; i < 316; i++) {
-			t[i - 300] = Context[i];
+			s[i - 300] = Context[i];
 		}
 
-		if (strcmp(t, donglein_key) == 0) {
+		if (strcmp(s, donglein_key) == 0) {
 			is_donglein_connected = TRUE;
 		}
 		else {
@@ -313,6 +315,7 @@ BOOL CCommandWindow::SubProc(Serial* SP) {
 		CloseHandle(hUsb);
 	}
 	
+	BOOL is_smart_id_card_connected = FALSE;
 	if (smart_id_card == TRUE) {
 		SP->WriteData("a\r", 2);
 
@@ -332,21 +335,19 @@ BOOL CCommandWindow::SubProc(Serial* SP) {
 		}
 	}
 
-	BOOL t2 = TRUE;
-
+	BOOL b = TRUE;
 	if (donglein == TRUE && is_donglein_connected == FALSE) {
-		t2 = FALSE;
+		b = FALSE;
 	}
-
 	if (smart_id_card == TRUE && is_smart_id_card_connected == FALSE) {
-		t2 = FALSE;
+		b = FALSE;
 	}
 
-	if (t2 == TRUE && !_fConnected) {
+	if (b == TRUE && !_fConnected) {
 		_fConnected = !_fConnected;
 		_pProvider->OnConnectStatusChanged();
 	}
-	else if (t2 == FALSE && _fConnected) {
+	else if (b == FALSE && _fConnected) {
 		_fConnected = !_fConnected;
 		_pProvider->OnConnectStatusChanged();
 	}

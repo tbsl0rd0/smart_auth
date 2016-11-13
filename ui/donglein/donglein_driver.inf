@@ -8,7 +8,7 @@ Class=USB ; TODO: edit Class
 ClassGuid={36FC9E60-C465-11CF-8056-444553540000} ; TODO: edit ClassGuid
 Provider=%ManufacturerName%
 CatalogFile=donglein_driver.cat
-DriverVer=11/12/2016,13.50.45.504
+DriverVer=11/13/2016,15.18.4.753
 
 [DestinationDirs]
 DefaultDestDir = 12

@@ -11,16 +11,16 @@ using namespace std;
 #define INPUT_BYTE 10
 #define OUTPUT_BYTE INPUT_BYTE*8/5
 
-int main(){
+int main() {
 
 	BYTE buffer[INPUT_BYTE] = {};
-	char secret[OUTPUT_BYTE+1] = {};
-	
+	char secret[OUTPUT_BYTE + 1] = {};
+
 
 	Base32 b32;
 
 	srand(time(NULL));
-	for (int i = 0; i < INPUT_BYTE; i++){
+	for (int i = 0; i < INPUT_BYTE; i++) {
 		buffer[i] = rand() % 128;
 	}
 

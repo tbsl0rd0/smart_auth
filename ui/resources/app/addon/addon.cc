@@ -42,7 +42,7 @@ void set_initial_registry_values(const FunctionCallbackInfo<Value>& arguments) {
   RegSetValueExW(phkResult, L"UserName", 0, REG_SZ, (const BYTE *)user_name, (DWORD)(wcslen(user_name) * sizeof WCHAR));
 
 
-  LPCWSTR valueName[] = {L"Donglein", L"GoogleOTP", L"DongleinKey", L"SmartIDCard", L"GoogleOTPKey", L"HardwareAuth"};
+  LPCWSTR valueName[] = { L"Donglein", L"GoogleOTP", L"DongleinKey", L"SmartIDCard", L"GoogleOTPKey", L"HardwareAuth" };
 	for (int i = 0; i < sizeof(valueName) / sizeof(valueName[0]); i++) {
 		if (RegQueryValueExW(phkResult, valueName[i], NULL, NULL, NULL, NULL) == ERROR_FILE_NOT_FOUND) {
 			RegSetValueExW(phkResult, valueName[i], 0, REG_SZ, (const BYTE *)L"0", (DWORD)(wcslen(L"0") * sizeof WCHAR));
@@ -54,7 +54,7 @@ void set_initial_registry_values(const FunctionCallbackInfo<Value>& arguments) {
 
   RegOpenKeyExW(HKEY_LOCAL_MACHINE, L"SOFTWARE\\SmartAuth\\settings", REG_OPTION_OPEN_LINK, KEY_ALL_ACCESS, &phkResult);
 
-  LPCWSTR valueName2[] = {L"on_off", L"hide_other_users_logon_tiles", L"prohibit_fallback_credential_provider"};
+  LPCWSTR valueName2[] = { L"on_off", L"hide_other_users_logon_tiles", L"prohibit_fallback_credential_provider" };
 	for (int i = 0; i < sizeof(valueName2) / sizeof(valueName2[0]); i++) {
 		if (RegQueryValueExW(phkResult, valueName2[i], NULL, NULL, NULL, NULL) == ERROR_FILE_NOT_FOUND) {
 			RegSetValueExW(phkResult, valueName2[i], 0, REG_SZ, (const BYTE *)L"0", (DWORD)(wcslen(L"0") * sizeof WCHAR));
@@ -72,7 +72,7 @@ void get_authentication_factor_registry_value(const FunctionCallbackInfo<Value>&
   HKEY phkResult;
   RegOpenKeyExW(HKEY_LOCAL_MACHINE, L"SOFTWARE\\SmartAuth", REG_OPTION_OPEN_LINK, KEY_ALL_ACCESS, &phkResult);
 
-  LPCWSTR valueName[] = {L"Donglein", L"GoogleOTP", L"SmartIDCard", L"HardwareAuth"};
+  LPCWSTR valueName[] = { L"Donglein", L"GoogleOTP", L"SmartIDCard", L"HardwareAuth" };
 
   BYTE data[256];
 	memset(data, 0, sizeof(data));
@@ -99,8 +99,7 @@ void set_authentication_factor_registry_value(const FunctionCallbackInfo<Value>&
   HKEY phkResult;
   RegOpenKeyExW(HKEY_LOCAL_MACHINE, L"SOFTWARE\\SmartAuth", REG_OPTION_OPEN_LINK, KEY_ALL_ACCESS, &phkResult);
 
-  LPCWSTR valueName[] = {L"Donglein", L"GoogleOTP", L"SmartIDCard", L"HardwareAuth"};
-
+  LPCWSTR valueName[] = { L"Donglein", L"GoogleOTP", L"SmartIDCard", L"HardwareAuth" };
   LPCWSTR data;
   if (j == 0) {
     data = L"0";
@@ -108,7 +107,6 @@ void set_authentication_factor_registry_value(const FunctionCallbackInfo<Value>&
   else if (j == 1) {
     data = L"1";
   }
-
   RegSetValueExW(phkResult, valueName[i], 0, REG_SZ, (const BYTE *)data, (DWORD)(wcslen(data) * sizeof WCHAR));
 
   RegCloseKey(phkResult);
@@ -122,8 +120,7 @@ void get_setting_registry_value(const FunctionCallbackInfo<Value>& arguments) {
   HKEY phkResult;
   RegOpenKeyExW(HKEY_LOCAL_MACHINE, L"SOFTWARE\\SmartAuth\\settings", REG_OPTION_OPEN_LINK, KEY_ALL_ACCESS, &phkResult);
 
-  LPCWSTR valueName[] = {L"on_off", L"hide_other_users_logon_tiles", L"prohibit_fallback_credential_provider"};
-
+  LPCWSTR valueName[] = { L"on_off", L"hide_other_users_logon_tiles", L"prohibit_fallback_credential_provider" };
   BYTE data[256];
   memset(data, 0, sizeof(data));
   DWORD cbData = 256;
@@ -149,8 +146,7 @@ void set_setting_registry_value(const FunctionCallbackInfo<Value>& arguments) {
   HKEY phkResult;
   RegOpenKeyExW(HKEY_LOCAL_MACHINE, L"SOFTWARE\\SmartAuth\\settings", REG_OPTION_OPEN_LINK, KEY_ALL_ACCESS, &phkResult);
 
-  LPCWSTR valueName[] = {L"on_off", L"hide_other_users_logon_tiles", L"prohibit_fallback_credential_provider"};
-
+  LPCWSTR valueName[] = { L"on_off", L"hide_other_users_logon_tiles", L"prohibit_fallback_credential_provider" };
   LPCWSTR data;
   if (j == 0) {
     data = L"0";
@@ -164,15 +160,81 @@ void set_setting_registry_value(const FunctionCallbackInfo<Value>& arguments) {
 }
 
 void set_google_otp_key_registry_value(const FunctionCallbackInfo<Value>& arguments) {
-  String::Utf8Value t(arguments[0]->ToString());
+  String::Utf8Value s(arguments[0]->ToString());
 
   HKEY phkResult;
   RegOpenKeyExW(HKEY_LOCAL_MACHINE, L"SOFTWARE\\SmartAuth", REG_OPTION_OPEN_LINK, KEY_ALL_ACCESS, &phkResult);
 
   wchar_t data[256] = {0};
-  mbstowcs(data, (const char *)*t, strlen(*t));
-
+  mbstowcs(data, (const char *)*s, strlen(*s));
   RegSetValueExW(phkResult, L"GoogleOTPKey", 0, REG_SZ, (const BYTE *)data, (DWORD)(wcslen(data) * sizeof WCHAR));
+
+  RegCloseKey(phkResult);
+}
+
+void set_donglein_key(const FunctionCallbackInfo<Value>& arguments) {
+  Isolate* isolate = arguments.GetIsolate();
+
+  String::Utf8Value s(arguments[0]->ToString());
+  CHAR s2[512] = { 0 };
+  strcpy(s2, *s);
+
+  HINSTANCE hInst = LoadLibraryW(L"donglein/donglein_dll.dll");
+
+	CreateDevice fCreateDevice = (CreateDevice)GetProcAddress(hInst, "CreateDevice");
+	GetConfigurationDescriptor fGetConfigurationDescriptor = (GetConfigurationDescriptor)GetProcAddress(hInst, "GetConfigurationDescriptor");
+	ReadCapacity fReadCapacity = (ReadCapacity)GetProcAddress(hInst, "ReadCapacity");
+	RequestSense fRequestSense = (RequestSense)GetProcAddress(hInst, "RequestSense");
+	MediaRead fMediaRead = (MediaRead)GetProcAddress(hInst, "MediaRead");
+	MediaWrite fMediaWrite = (MediaWrite)GetProcAddress(hInst, "MediaWrite");
+
+  HANDLE hUsb;
+	CAPACITY mediaCapacity;
+	BYTE Context[512] = { 0 };
+
+	hUsb = fCreateDevice();
+
+	if (hUsb == INVALID_HANDLE_VALUE)
+	{
+    arguments.GetReturnValue().Set(String::NewFromUtf8(isolate, "can't connect"));
+		return;
+	}
+
+	if (fGetConfigurationDescriptor(hUsb) == FALSE)
+	{
+		arguments.GetReturnValue().Set(String::NewFromUtf8(isolate, "can't connect"));
+		return;
+	}
+
+	while (fReadCapacity(hUsb, &mediaCapacity) == FALSE) {
+		fRequestSense(hUsb);
+		Sleep(100);
+	}
+
+	fMediaRead(hUsb, &mediaCapacity, Context);
+
+	for (int i = 300; i < 316; i++) {
+		 Context[i] = s2[i - 300];
+	}
+
+  fMediaWrite(hUsb, &mediaCapacity, Context);
+
+  CloseHandle(hUsb);
+
+  FreeLibrary(hInst);
+
+  arguments.GetReturnValue().Set(String::NewFromUtf8(isolate, "success"));
+}
+
+void set_donglein_key_registry_value(const FunctionCallbackInfo<Value>& arguments) {
+  String::Utf8Value s(arguments[0]->ToString());
+
+  HKEY phkResult;
+  RegOpenKeyExW(HKEY_LOCAL_MACHINE, L"SOFTWARE\\SmartAuth", REG_OPTION_OPEN_LINK, KEY_ALL_ACCESS, &phkResult);
+
+  wchar_t data[256] = {0};
+  mbstowcs(data, (const char *)*s, strlen(*s));
+  RegSetValueExW(phkResult, L"DongleinKey", 0, REG_SZ, (const BYTE *)data, (DWORD)(wcslen(data) * sizeof WCHAR));
 
   RegCloseKey(phkResult);
 }
@@ -224,7 +286,6 @@ void set_excluded_credential_provider_registry_value(const FunctionCallbackInfo<
   else if (i == 1) {
     data = L"{6f45dc1e-5384-457a-bc13-2cd81b0d28ed}";
   }
-
   RegSetValueExW(phkResult, L"ExcludedCredentialProviders", 0, REG_SZ, (const BYTE *)data, (DWORD)(wcslen(data) * sizeof WCHAR));
 
 	RegCloseKey(phkResult);
@@ -241,74 +302,6 @@ void set_fallback_credential_provider_registry_value(const FunctionCallbackInfo<
 	RegCloseKey(phkResult);
 }
 
-void set_donglein_key(const FunctionCallbackInfo<Value>& arguments) {
-  Isolate* isolate = arguments.GetIsolate();
-
-  String::Utf8Value t(arguments[0]->ToString());
-  CHAR t2[512] = { 0 };
-  strcpy(t2, *t);
-
-  HINSTANCE hInst = LoadLibraryW(L"donglein/donglein_dll.dll");
-
-	CreateDevice fCreateDevice = (CreateDevice)GetProcAddress(hInst, "CreateDevice");
-	GetConfigurationDescriptor fGetConfigurationDescriptor = (GetConfigurationDescriptor)GetProcAddress(hInst, "GetConfigurationDescriptor");
-	ReadCapacity fReadCapacity = (ReadCapacity)GetProcAddress(hInst, "ReadCapacity");
-	RequestSense fRequestSense = (RequestSense)GetProcAddress(hInst, "RequestSense");
-	MediaRead fMediaRead = (MediaRead)GetProcAddress(hInst, "MediaRead");
-	MediaWrite fMediaWrite = (MediaWrite)GetProcAddress(hInst, "MediaWrite");
-
-  HANDLE hUsb;
-	CAPACITY mediaCapacity;
-	BYTE Context[512] = { 0 };
-
-	hUsb = fCreateDevice();
-
-	if (hUsb == INVALID_HANDLE_VALUE)
-	{
-    arguments.GetReturnValue().Set(String::NewFromUtf8(isolate, "can't connect"));
-		return;
-	}
-
-	if (fGetConfigurationDescriptor(hUsb) == FALSE)
-	{
-		arguments.GetReturnValue().Set(String::NewFromUtf8(isolate, "can't connect"));
-		return;
-	}
-
-	while (fReadCapacity(hUsb, &mediaCapacity) == FALSE) {
-		fRequestSense(hUsb);
-		Sleep(100);
-	}
-
-	fMediaRead(hUsb, &mediaCapacity, Context);
-
-	for (int i = 300; i < 316; i++) {
-		 Context[i] = t2[i - 300];
-	}
-
-  fMediaWrite(hUsb, &mediaCapacity, Context);
-
-  CloseHandle(hUsb);
-
-  FreeLibrary(hInst);
-
-  arguments.GetReturnValue().Set(String::NewFromUtf8(isolate, "success"));
-}
-
-void set_donglein_key_registry_value(const FunctionCallbackInfo<Value>& arguments) {
-  String::Utf8Value t(arguments[0]->ToString());
-
-  HKEY phkResult;
-  RegOpenKeyExW(HKEY_LOCAL_MACHINE, L"SOFTWARE\\SmartAuth", REG_OPTION_OPEN_LINK, KEY_ALL_ACCESS, &phkResult);
-
-  wchar_t data[256] = {0};
-  mbstowcs(data, (const char *)*t, strlen(*t));
-
-  RegSetValueExW(phkResult, L"DongleinKey", 0, REG_SZ, (const BYTE *)data, (DWORD)(wcslen(data) * sizeof WCHAR));
-
-  RegCloseKey(phkResult);
-}
-
 void initialize(Local<Object> exports) {
   NODE_SET_METHOD(exports, "create_registry_keys", create_registry_keys);
 
@@ -322,16 +315,15 @@ void initialize(Local<Object> exports) {
 
   NODE_SET_METHOD(exports, "set_google_otp_key_registry_value", set_google_otp_key_registry_value);
 
+  NODE_SET_METHOD(exports, "set_donglein_key", set_donglein_key);
+  NODE_SET_METHOD(exports, "set_donglein_key_registry_value", set_donglein_key_registry_value);
+
   NODE_SET_METHOD(exports, "set_credential_provider_registry_keys_and_values", set_credential_provider_registry_keys_and_values);
   NODE_SET_METHOD(exports, "delete_credential_provider_registry_keys", delete_credential_provider_registry_keys);
 
   NODE_SET_METHOD(exports, "set_excluded_credential_provider_registry_value", set_excluded_credential_provider_registry_value);
 
   NODE_SET_METHOD(exports, "set_fallback_credential_provider_registry_value", set_fallback_credential_provider_registry_value);
-
-  NODE_SET_METHOD(exports, "set_donglein_key", set_donglein_key);
-
-  NODE_SET_METHOD(exports, "set_donglein_key_registry_value", set_donglein_key_registry_value);
 }
 
 NODE_MODULE(addon, initialize)

@@ -2,12 +2,12 @@
 #include <iostream>
 using namespace std;
 
-int Base32::base32_decode(const BYTE *encoded, BYTE *result, int bufSize){
+int Base32::base32_decode(const BYTE *encoded, BYTE *result, int bufSize) {
 	int buffer = 0;
 	int bitsLeft = 0;
 	int count = 0;
 
-	for (const BYTE *ptr = encoded; count < bufSize && *ptr; ++ptr){
+	for (const BYTE *ptr = encoded; count < bufSize && *ptr; ++ptr) {
 		BYTE ch = *ptr;
 		if (ch == ' ' || ch == '\t' || ch == '\r' || ch == '\n' || ch == '-') {
 			continue;
@@ -47,10 +47,10 @@ int Base32::base32_decode(const BYTE *encoded, BYTE *result, int bufSize){
 		result[count] = '\000';
 	}
 	return count;
-	
+
 }
 
-int Base32::base32_encode(const BYTE *data, int length, BYTE *result, int bufSize){
+int Base32::base32_encode(const BYTE *data, int length, BYTE *result, int bufSize) {
 	if (length < 0 || length >(1 << 28)) {
 		return -1;
 	}
@@ -59,7 +59,7 @@ int Base32::base32_encode(const BYTE *data, int length, BYTE *result, int bufSiz
 		int buffer = data[0];
 		int next = 1;
 		int bitsLeft = 8;
-		for(int i = 0; i < length; i++) {
+		for (int i = 0; i < length; i++) {
 			if (bitsLeft < 5) {
 				if (next < length) {
 					buffer <<= 8;
@@ -78,7 +78,7 @@ int Base32::base32_encode(const BYTE *data, int length, BYTE *result, int bufSiz
 		}
 	}
 	//if (count < bufSize) {
-		result[count] = '\000';
+	result[count] = '\000';
 	//}
 	return count;
 }

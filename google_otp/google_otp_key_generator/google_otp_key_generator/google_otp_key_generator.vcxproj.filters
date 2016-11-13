@@ -21,21 +21,21 @@
     <ClCompile Include="HMAC_SHA1.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="SHA1.cpp">
+    <ClCompile Include="main.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="SHA1.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\Downloads\HMAC_SHA1\HMAC_SHA1\HMAC_SHA1.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Downloads\HMAC_SHA1\HMAC_SHA1\SHA1.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="base32.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="HMAC_SHA1.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="SHA1.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

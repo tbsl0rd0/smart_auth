@@ -32,15 +32,15 @@ $('#donglein_key_setting_next').on('click', () => {
   setTimeout(() => {
     donglein_key = '';
 
-    let t = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    let s = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
     for(let i = 0; i < 16; i++) {
-      donglein_key += t.charAt(Math.floor(Math.random() * t.length));
+      donglein_key += s.charAt(Math.floor(Math.random() * s.length));
     }
 
-    let r = addon.set_donglein_key(donglein_key);
+    let s2 = addon.set_donglein_key(donglein_key);
 
-    if (r == 'success') {
+    if (s2 == 'success') {
       $('#donglein_key_setting_step_2').removeClass('active');
 
       $('#donglein_key_setting_step_3').removeClass('disabled');
@@ -52,7 +52,7 @@ $('#donglein_key_setting_next').on('click', () => {
       $('#donglein_key_setting_next').css('display', 'none');
       $('#donglein_key_setting_confirm').css('display', 'inline-block');
     }
-    else if (r == 'can\'t connect') {
+    else if (s2 == 'can\'t connect') {
       $('#donglein_key_setting_step_2').removeClass('active');
 
       $('#donglein_key_setting_step_3').removeClass('disabled');
