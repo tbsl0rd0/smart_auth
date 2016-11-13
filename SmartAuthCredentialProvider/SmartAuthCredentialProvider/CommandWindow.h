@@ -44,6 +44,6 @@ private:
 	HANDLE hThread;
 
 	BOOL donglein;
-	CHAR donglein_key[256] = { 0 };
+	CHAR donglein_key[256];
 	BOOL smart_id_card;
 };

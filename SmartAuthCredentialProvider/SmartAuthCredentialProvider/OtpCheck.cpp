@@ -16,6 +16,9 @@ int OtpCheck(long keyNumber){
 	{
 		RegQueryValueEx(hKey, KEY_NAME, NULL, &dwType, (LPBYTE)szBuffer, &dwSize);
 	}
+
+	RegCloseKey(hKey);
+
 	int key_size = strlen(szBuffer);
 	
 	for (int i = 0; i < BASE32_SIZE; i++){

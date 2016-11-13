@@ -1,4 +1,4 @@
-let donglein_key = '';
+let donglein_key;
 
 $('#google_otp_key_setting_confirm').on('click', () => {
   authentication_factors['GoogleOTP'] = '1';
@@ -30,6 +30,8 @@ $('#donglein_key_setting_next').on('click', () => {
   $('#donglein_key_setting_step_2').addClass('active');
 
   setTimeout(() => {
+    donglein_key = '';
+
     let t = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
     for(let i = 0; i < 16; i++) {
@@ -80,6 +82,8 @@ $('#donglein_key_setting_confirm').on('click', () => {
   reset_items();
 
   addon.set_authentication_factor_registry_value(authentication_factors_enumeration['Donglein'], 1);
+
+  addon.set_authentication_factor_registry_value(authentication_factors_enumeration['HardwareAuth'], 1);
 
   addon.set_donglein_key_registry_value(donglein_key);
 });

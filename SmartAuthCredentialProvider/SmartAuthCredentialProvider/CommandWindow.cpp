@@ -69,7 +69,6 @@ HRESULT CCommandWindow::Initialize(__in SmartAuthProvider *pProvider)
         hr = HRESULT_FROM_WIN32(GetLastError());
     }
 
-	//레지스트리를 읽고 설정정보를 멤버변수로 저장
 	HKEY phkResult;
 	RegOpenKeyExW(HKEY_LOCAL_MACHINE, L"SOFTWARE\\SmartAuth\\", REG_OPTION_OPEN_LINK, KEY_ALL_ACCESS, &phkResult);
 
@@ -89,7 +88,8 @@ HRESULT CCommandWindow::Initialize(__in SmartAuthProvider *pProvider)
 	cbData = 256;
 	RegQueryValueExW(phkResult, L"DongleinKey", NULL, NULL, data, &cbData);
 
-	wctomb(donglein_key, (wchar_t)data);
+	memset(donglein_key, 0, sizeof(donglein_key));
+	WideCharToMultiByte(CP_ACP, 0, (LPCWSTR)data, -1, donglein_key, sizeof(donglein_key), NULL, NULL);
 
 	memset(data, 0, sizeof(data));
 	cbData = 256;
@@ -260,17 +260,40 @@ BOOL CCommandWindow::SubProc(Serial* SP) {
 
 		if (hUsb == INVALID_HANDLE_VALUE)
 		{
+			if (_fConnected) {
+				_fConnected = !_fConnected;
+				_pProvider->OnConnectStatusChanged();
+			}
+
+			Sleep(200);
+
 			return TRUE;
 		}
 
 		if (GetConfigurationDescriptor(hUsb) == FALSE)
 		{
+			if (_fConnected) {
+				_fConnected = !_fConnected;
+				_pProvider->OnConnectStatusChanged();
+			}
+
+			Sleep(200);
+
 			return TRUE;
 		}
 
+		int count = 0;
 		while (ReadCapacity(hUsb, &mediaCapacity) == FALSE) {
 			RequestSense(hUsb);
 			Sleep(100);
+			if (count > 20) {
+				if (_fConnected) {
+					_fConnected = !_fConnected;
+					_pProvider->OnConnectStatusChanged();
+				}
+				return TRUE;
+			}
+			count++;
 		}
 
 		MediaRead(hUsb, &mediaCapacity, Context);
@@ -281,15 +304,15 @@ BOOL CCommandWindow::SubProc(Serial* SP) {
 		}
 
 		if (strcmp(t, donglein_key) == 0) {
-			is_donglein_connected == TRUE;
+			is_donglein_connected = TRUE;
 		}
 		else {
-			is_donglein_connected == FALSE;
+			is_donglein_connected = FALSE;
 		}
 
 		CloseHandle(hUsb);
 	}
-
+	
 	if (smart_id_card == TRUE) {
 		SP->WriteData("a\r", 2);
 
@@ -309,25 +332,27 @@ BOOL CCommandWindow::SubProc(Serial* SP) {
 		}
 	}
 
-	BOOL overall_test = TRUE;
+	BOOL t2 = TRUE;
 
 	if (donglein == TRUE && is_donglein_connected == FALSE) {
-		overall_test = FALSE;
+		t2 = FALSE;
 	}
 
 	if (smart_id_card == TRUE && is_smart_id_card_connected == FALSE) {
-		overall_test = FALSE;
+		t2 = FALSE;
 	}
 
-	if (overall_test == TRUE && !_fConnected) {
+	if (t2 == TRUE && !_fConnected) {
 		_fConnected = !_fConnected;
 		_pProvider->OnConnectStatusChanged();
 	}
-	else if (overall_test == FALSE && _fConnected) {
+	else if (t2 == FALSE && _fConnected) {
 		_fConnected = !_fConnected;
 		_pProvider->OnConnectStatusChanged();
 	}
 	
+	Sleep(200);
+
 	return TRUE;
 }
 
@@ -414,9 +439,9 @@ DWORD WINAPI CCommandWindow::_ThreadProc2(__in LPVOID lpParameter) {
 	if (pCommandWindow == NULL) {
 		return 0;
 	}
-
+	
 	Serial* SP = new Serial("\\\\.\\COM3");
-
+	
 	while (pCommandWindow->SubProc(SP)) {
 	}
 }

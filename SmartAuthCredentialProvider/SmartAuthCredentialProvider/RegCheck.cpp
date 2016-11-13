@@ -39,6 +39,8 @@ RegFlag SetReg() {
 		else rf.REG_HardwareAuth = '0';
 	}
 
+	RegCloseKey(hKey);
+
 	return rf;
 
 }

@@ -24,10 +24,10 @@ typedef VOID (*MediaWrite)(HANDLE hUsb, PCAPACITY Capacity, BYTE *Context);
 
 void create_registry_keys(const FunctionCallbackInfo<Value>& arguments) {
   HKEY hKey;
-	RegCreateKeyExW(HKEY_LOCAL_MACHINE, L"SOFTWARE\\SmartAuth\\", 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL);
+	RegCreateKeyExW(HKEY_LOCAL_MACHINE, L"SOFTWARE\\SmartAuth", 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL);
 	RegCloseKey(hKey);
 
-	RegCreateKeyExW(HKEY_LOCAL_MACHINE, L"SOFTWARE\\SmartAuth\\settings\\", 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL);
+	RegCreateKeyExW(HKEY_LOCAL_MACHINE, L"SOFTWARE\\SmartAuth\\settings", 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL);
 	RegCloseKey(hKey);
 }
 
@@ -37,7 +37,7 @@ void set_initial_registry_values(const FunctionCallbackInfo<Value>& arguments) {
 	GetUserNameW(user_name, &nSize);
 
   HKEY phkResult;
-  RegOpenKeyExW(HKEY_LOCAL_MACHINE, L"SOFTWARE\\SmartAuth\\", REG_OPTION_OPEN_LINK, KEY_ALL_ACCESS, &phkResult);
+  RegOpenKeyExW(HKEY_LOCAL_MACHINE, L"SOFTWARE\\SmartAuth", REG_OPTION_OPEN_LINK, KEY_ALL_ACCESS, &phkResult);
 
   RegSetValueExW(phkResult, L"UserName", 0, REG_SZ, (const BYTE *)user_name, (DWORD)(wcslen(user_name) * sizeof WCHAR));
 
@@ -52,7 +52,7 @@ void set_initial_registry_values(const FunctionCallbackInfo<Value>& arguments) {
 	RegCloseKey(phkResult);
 
 
-  RegOpenKeyExW(HKEY_LOCAL_MACHINE, L"SOFTWARE\\SmartAuth\\settings\\", REG_OPTION_OPEN_LINK, KEY_ALL_ACCESS, &phkResult);
+  RegOpenKeyExW(HKEY_LOCAL_MACHINE, L"SOFTWARE\\SmartAuth\\settings", REG_OPTION_OPEN_LINK, KEY_ALL_ACCESS, &phkResult);
 
   LPCWSTR valueName2[] = {L"on_off", L"hide_other_users_logon_tiles", L"prohibit_fallback_credential_provider"};
 	for (int i = 0; i < sizeof(valueName2) / sizeof(valueName2[0]); i++) {
@@ -70,7 +70,7 @@ void get_authentication_factor_registry_value(const FunctionCallbackInfo<Value>&
   int i = (int)arguments[0]->NumberValue();
 
   HKEY phkResult;
-  RegOpenKeyExW(HKEY_LOCAL_MACHINE, L"SOFTWARE\\SmartAuth\\", REG_OPTION_OPEN_LINK, KEY_ALL_ACCESS, &phkResult);
+  RegOpenKeyExW(HKEY_LOCAL_MACHINE, L"SOFTWARE\\SmartAuth", REG_OPTION_OPEN_LINK, KEY_ALL_ACCESS, &phkResult);
 
   LPCWSTR valueName[] = {L"Donglein", L"GoogleOTP", L"SmartIDCard", L"HardwareAuth"};
 
@@ -97,7 +97,7 @@ void set_authentication_factor_registry_value(const FunctionCallbackInfo<Value>&
   int j = (int)arguments[1]->NumberValue();
 
   HKEY phkResult;
-  RegOpenKeyExW(HKEY_LOCAL_MACHINE, L"SOFTWARE\\SmartAuth\\", REG_OPTION_OPEN_LINK, KEY_ALL_ACCESS, &phkResult);
+  RegOpenKeyExW(HKEY_LOCAL_MACHINE, L"SOFTWARE\\SmartAuth", REG_OPTION_OPEN_LINK, KEY_ALL_ACCESS, &phkResult);
 
   LPCWSTR valueName[] = {L"Donglein", L"GoogleOTP", L"SmartIDCard", L"HardwareAuth"};
 
@@ -167,7 +167,7 @@ void set_google_otp_key_registry_value(const FunctionCallbackInfo<Value>& argume
   String::Utf8Value t(arguments[0]->ToString());
 
   HKEY phkResult;
-  RegOpenKeyExW(HKEY_LOCAL_MACHINE, L"SOFTWARE\\SmartAuth\\", REG_OPTION_OPEN_LINK, KEY_ALL_ACCESS, &phkResult);
+  RegOpenKeyExW(HKEY_LOCAL_MACHINE, L"SOFTWARE\\SmartAuth", REG_OPTION_OPEN_LINK, KEY_ALL_ACCESS, &phkResult);
 
   wchar_t data[256] = {0};
   mbstowcs(data, (const char *)*t, strlen(*t));
@@ -299,7 +299,7 @@ void set_donglein_key_registry_value(const FunctionCallbackInfo<Value>& argument
   String::Utf8Value t(arguments[0]->ToString());
 
   HKEY phkResult;
-  RegOpenKeyExW(HKEY_LOCAL_MACHINE, L"SOFTWARE\\SmartAuth\\", REG_OPTION_OPEN_LINK, KEY_ALL_ACCESS, &phkResult);
+  RegOpenKeyExW(HKEY_LOCAL_MACHINE, L"SOFTWARE\\SmartAuth", REG_OPTION_OPEN_LINK, KEY_ALL_ACCESS, &phkResult);
 
   wchar_t data[256] = {0};
   mbstowcs(data, (const char *)*t, strlen(*t));
