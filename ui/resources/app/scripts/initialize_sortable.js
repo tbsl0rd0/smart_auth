@@ -38,14 +38,9 @@ new Sortable(document.getElementById('current_authentication_factor_list_2'), {
     }
     else {
       authentication_factors[item.getAttribute('value')] = '1';
-
       reset_items();
 
       addon.set_authentication_factor_registry_value(authentication_factors_enumeration[item.getAttribute('value')], 1);
-    }
-
-    if (addon.get_authentication_factor_registry_value(authentication_factors_enumeration['Donglein']) == '1' || addon.get_authentication_factor_registry_value(authentication_factors_enumeration['SmartIDCard']) == '1') {
-      addon.set_authentication_factor_registry_value(authentication_factors_enumeration['HardwareAuth'], 1);
     }
   },
   onRemove: (event) => {
@@ -58,7 +53,6 @@ new Sortable(document.getElementById('current_authentication_factor_list_2'), {
     }
 
     authentication_factors[item.getAttribute('value')] = '0';
-
     reset_items();
 
     addon.set_authentication_factor_registry_value(authentication_factors_enumeration[item.getAttribute('value')], 0);

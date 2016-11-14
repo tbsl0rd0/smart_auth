@@ -16,7 +16,6 @@ app.on('ready', () => {
   });
 
   initialization_window.setIgnoreMouseEvents(true);
-
   initialization_window.loadURL(`file://${__dirname}/initialization_window.html`);
 
   initialization_window.once('ready-to-show', () => {
@@ -55,9 +54,8 @@ app.on('ready', () => {
         frame: false
       });
 
-      main_window.loadURL(`file://${__dirname}/main_window.html`);
-
       // main_window.webContents.openDevTools();
+      main_window.loadURL(`file://${__dirname}/main_window.html`);
 
       main_window.once('ready-to-show', () => {
         main_window.show();

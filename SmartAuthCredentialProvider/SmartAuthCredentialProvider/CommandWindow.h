@@ -43,7 +43,7 @@ private:
 
 	HANDLE hThread;
 
-	BOOL donglein;
+	BOOL is_donglein_used;
 	CHAR donglein_key[256];
-	BOOL smart_id_card;
+	BOOL is_smart_id_card_used;
 };

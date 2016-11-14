@@ -139,7 +139,7 @@ void loop() {
         outBuffer[outBufferPosition] = c;
         outBufferPosition ++;
     }
-    BTSerial.write(c);
+    // BTSerial.write(c);
   }
 }
 void resetSaves(){

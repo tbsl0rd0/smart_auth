@@ -2,6 +2,7 @@ $('#tab > .item').tab();
 
 $('.animated_tada').on('mouseover', function() {
   $(this).addClass('animated tada');
+
   setTimeout(() => {
     $(this).removeClass('animated tada');
   }, 800);

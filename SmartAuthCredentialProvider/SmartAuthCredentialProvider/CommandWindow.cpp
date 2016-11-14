@@ -73,33 +73,33 @@ HRESULT CCommandWindow::Initialize(__in SmartAuthProvider *pProvider)
 	RegOpenKeyExW(HKEY_LOCAL_MACHINE, L"SOFTWARE\\SmartAuth\\", REG_OPTION_OPEN_LINK, KEY_ALL_ACCESS, &phkResult);
 
 	BYTE data[256];
-	memset(data, 0, sizeof(data));
+	memset(data, 0, sizeof data);
 	DWORD cbData = 256;
 	RegQueryValueExW(phkResult, L"Donglein", NULL, NULL, data, &cbData);
 
 	if (lstrcmpW((LPCWSTR)data, L"0") == 0) {
-		donglein = FALSE;
+		is_donglein_used = FALSE;
 	}
 	else {
-		donglein = TRUE;
+		is_donglein_used = TRUE;
 	}
 
-	memset(data, 0, sizeof(data));
+	memset(data, 0, sizeof data);
 	cbData = 256;
 	RegQueryValueExW(phkResult, L"DongleinKey", NULL, NULL, data, &cbData);
 
-	memset(donglein_key, 0, sizeof(donglein_key));
-	WideCharToMultiByte(CP_ACP, 0, (LPCWSTR)data, -1, donglein_key, sizeof(donglein_key), NULL, NULL);
+	memset(donglein_key, 0, sizeof donglein_key);
+	WideCharToMultiByte(CP_ACP, 0, (LPCWSTR)data, -1, donglein_key, sizeof donglein_key, NULL, NULL);
 
-	memset(data, 0, sizeof(data));
+	memset(data, 0, sizeof data);
 	cbData = 256;
 	RegQueryValueExW(phkResult, L"SmartIDCard", NULL, NULL, data, &cbData);
 
 	if (lstrcmpW((LPCWSTR)data, L"0") == 0) {
-		smart_id_card = FALSE;
+		is_smart_id_card_used = FALSE;
 	}
 	else {
-		smart_id_card = TRUE;
+		is_smart_id_card_used = TRUE;
 	}
 
 	RegCloseKey(phkResult);
@@ -248,8 +248,8 @@ BOOL CCommandWindow::_ProcessNextMessage()
 }
 
 BOOL CCommandWindow::SubProc(Serial* SP) {
-	BOOL is_donglein_connected = FALSE;	
-	if (donglein == TRUE) {
+	BOOL is_donglein_passed = FALSE;
+	if (is_donglein_used == TRUE) {
 		HANDLE hUsb;
 		CAPACITY mediaCapacity;
 		BYTE Context[512] = { 0 };
@@ -280,13 +280,13 @@ BOOL CCommandWindow::SubProc(Serial* SP) {
 			return TRUE;
 		}
 
-		int c = 0;
+		int count = 0;
 		while (ReadCapacity(hUsb, &mediaCapacity) == FALSE) {
 			RequestSense(hUsb);
 
 			Sleep(100);
 
-			if (c > 20) {
+			if (count > 20) {
 				if (_fConnected) {
 					_fConnected = !_fConnected;
 					_pProvider->OnConnectStatusChanged();
@@ -295,28 +295,28 @@ BOOL CCommandWindow::SubProc(Serial* SP) {
 				return TRUE;
 			}
 
-			c++;
+			count++;
 		}
 
 		MediaRead(hUsb, &mediaCapacity, Context);
 
-		CHAR s[512] = { 0 };
+		CHAR donglein_key_2[512] = { 0 };
 		for (int i = 300; i < 316; i++) {
-			s[i - 300] = Context[i];
+			donglein_key_2[i - 300] = Context[i];
 		}
 
-		if (strcmp(s, donglein_key) == 0) {
-			is_donglein_connected = TRUE;
+		if (strcmp(donglein_key_2, donglein_key) == 0) {
+			is_donglein_passed = TRUE;
 		}
 		else {
-			is_donglein_connected = FALSE;
+			is_donglein_passed = FALSE;
 		}
 
 		CloseHandle(hUsb);
 	}
 	
-	BOOL is_smart_id_card_connected = FALSE;
-	if (smart_id_card == TRUE) {
+	BOOL is_smart_id_card_passed = FALSE;
+	if (is_smart_id_card_used == TRUE) {
 		SP->WriteData("a\r", 2);
 
 		Sleep(200);
@@ -328,26 +328,26 @@ BOOL CCommandWindow::SubProc(Serial* SP) {
 		incomingData[readResult] = 0;
 
 		if (strcmp(incomingData, "b") == 0) {
-			is_smart_id_card_connected = TRUE;
+			is_smart_id_card_passed = TRUE;
 		}
 		else {
-			is_smart_id_card_connected = FALSE;
+			is_smart_id_card_passed = FALSE;
 		}
 	}
 
-	BOOL b = TRUE;
-	if (donglein == TRUE && is_donglein_connected == FALSE) {
-		b = FALSE;
+	BOOL overall_pass = TRUE;
+	if (is_donglein_used == TRUE && is_donglein_passed == FALSE) {
+		overall_pass = FALSE;
 	}
-	if (smart_id_card == TRUE && is_smart_id_card_connected == FALSE) {
-		b = FALSE;
+	if (is_smart_id_card_used == TRUE && is_smart_id_card_passed == FALSE) {
+		overall_pass = FALSE;
 	}
 
-	if (b == TRUE && !_fConnected) {
+	if (overall_pass == TRUE && !_fConnected) {
 		_fConnected = !_fConnected;
 		_pProvider->OnConnectStatusChanged();
 	}
-	else if (b == FALSE && _fConnected) {
+	else if (overall_pass == FALSE && _fConnected) {
 		_fConnected = !_fConnected;
 		_pProvider->OnConnectStatusChanged();
 	}
