@@ -5,7 +5,6 @@ $('#google_otp_key_setting_confirm').on('click', () => {
   reset_items();
 
   addon.set_authentication_factor_registry_value(authentication_factors_enumeration['GoogleOTP'], 1);
-  addon.set_authentication_factor_registry_value(authentication_factors_enumeration['HardwareAuth'], 1);
   addon.set_google_otp_key_registry_value($('#google_otp_key_setting_segment').text());
 
   $('#google_otp_key_setting_modal').modal('hide');
